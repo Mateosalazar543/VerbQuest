@@ -220,10 +220,16 @@ class GameService {
     }
     this.broadcast(room);
   }
-  tick(){for(const room of this.rooms.values()){
-    if(room.phase==='playing'&&this.now()>=room.endsAt)this.finish(room);
-    else if(room.phase==='playing')this.broadcast(room);
-  }this.cleanup();}
+  // El cliente ya calcula la cuenta regresiva con endsAt y serverNow.
+  // Enviar un ranking completo cada segundo a cada usuario consumía
+  // ancho de banda sin necesidad. Las mutaciones ya emiten broadcast().
+  // El temporizador sigue revisando cada segundo para cerrar la partida.
+  tick(){
+    for(const room of this.rooms.values()){
+      if(room.phase==='playing'&&this.now()>=room.endsAt)this.finish(room);
+    }
+    this.cleanup();
+  }
   cleanup(){const now=this.now();for(const [code,room] of this.rooms){
     if(room.phase==='results'&&now-room.finishedAt>30*60000||room.phase==='lobby'&&now-room.createdAt>90*60000)this.rooms.delete(code);
   }}
