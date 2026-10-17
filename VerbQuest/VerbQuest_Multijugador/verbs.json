@@ -1,0 +1,486 @@
+[
+  {
+    "base": "be",
+    "past": "was / were",
+    "pp": "been",
+    "es": "to exist, to be somewhere"
+  },
+  {
+    "base": "become",
+    "past": "became",
+    "pp": "become",
+    "es": "to turn into"
+  },
+  {
+    "base": "begin",
+    "past": "began",
+    "pp": "begun",
+    "es": "to start"
+  },
+  {
+    "base": "bet",
+    "past": "bet",
+    "pp": "bet",
+    "es": "to gamble on an outcome"
+  },
+  {
+    "base": "bite",
+    "past": "bit",
+    "pp": "bitten",
+    "es": "to cut with the teeth"
+  },
+  {
+    "base": "bleed",
+    "past": "bled",
+    "pp": "bled",
+    "es": "to lose blood"
+  },
+  {
+    "base": "blow",
+    "past": "blew",
+    "pp": "blown",
+    "es": "to push air out"
+  },
+  {
+    "base": "break",
+    "past": "broke",
+    "pp": "broken",
+    "es": "to split into pieces"
+  },
+  {
+    "base": "bring",
+    "past": "brought",
+    "pp": "brought",
+    "es": "to carry here"
+  },
+  {
+    "base": "build",
+    "past": "built",
+    "pp": "built",
+    "es": "to construct"
+  },
+  {
+    "base": "buy",
+    "past": "bought",
+    "pp": "bought",
+    "es": "to purchase"
+  },
+  {
+    "base": "can",
+    "past": "could",
+    "pp": "been able to",
+    "es": "to be able to",
+    "modal": true,
+    "note": "“Can” is a modal verb and has no past participle. “Been able to” is an equivalent expression used in perfect tenses."
+  },
+  {
+    "base": "catch",
+    "past": "caught",
+    "pp": "caught",
+    "es": "to grab, to capture"
+  },
+  {
+    "base": "choose",
+    "past": "chose",
+    "pp": "chosen",
+    "es": "to pick"
+  },
+  {
+    "base": "come",
+    "past": "came",
+    "pp": "come",
+    "es": "to arrive, to move toward"
+  },
+  {
+    "base": "cost",
+    "past": "cost",
+    "pp": "cost",
+    "es": "to have a price"
+  },
+  {
+    "base": "cut",
+    "past": "cut",
+    "pp": "cut",
+    "es": "to slice"
+  },
+  {
+    "base": "deal",
+    "past": "dealt",
+    "pp": "dealt",
+    "es": "to handle, to trade"
+  },
+  {
+    "base": "do",
+    "past": "did",
+    "pp": "done",
+    "es": "to perform, to carry out"
+  },
+  {
+    "base": "draw",
+    "past": "drew",
+    "pp": "drawn",
+    "es": "to sketch"
+  },
+  {
+    "base": "dream",
+    "past": "dreamt / dreamed",
+    "pp": "dreamt / dreamed",
+    "es": "to imagine while asleep"
+  },
+  {
+    "base": "drive",
+    "past": "drove",
+    "pp": "driven",
+    "es": "to operate a vehicle"
+  },
+  {
+    "base": "eat",
+    "past": "ate",
+    "pp": "eaten",
+    "es": "to consume food"
+  },
+  {
+    "base": "fall",
+    "past": "fell",
+    "pp": "fallen",
+    "es": "to drop down"
+  },
+  {
+    "base": "feed",
+    "past": "fed",
+    "pp": "fed",
+    "es": "to give food"
+  },
+  {
+    "base": "feel",
+    "past": "felt",
+    "pp": "felt",
+    "es": "to sense, to experience"
+  },
+  {
+    "base": "fight",
+    "past": "fought",
+    "pp": "fought",
+    "es": "to battle"
+  },
+  {
+    "base": "find",
+    "past": "found",
+    "pp": "found",
+    "es": "to discover"
+  },
+  {
+    "base": "fly",
+    "past": "flew",
+    "pp": "flown",
+    "es": "to travel through the air"
+  },
+  {
+    "base": "forbid",
+    "past": "forbade",
+    "pp": "forbidden",
+    "es": "to ban"
+  },
+  {
+    "base": "forget",
+    "past": "forgot",
+    "pp": "forgotten",
+    "es": "to fail to remember"
+  },
+  {
+    "base": "forgive",
+    "past": "forgave",
+    "pp": "forgiven",
+    "es": "to pardon"
+  },
+  {
+    "base": "get",
+    "past": "got",
+    "pp": "gotten / got",
+    "es": "to obtain, to receive",
+    "note": "“Gotten” is common in American English; “got” also works as a participle, especially in British English."
+  },
+  {
+    "base": "give",
+    "past": "gave",
+    "pp": "given",
+    "es": "to hand over"
+  },
+  {
+    "base": "go",
+    "past": "went",
+    "pp": "gone",
+    "es": "to travel, to move"
+  },
+  {
+    "base": "grow",
+    "past": "grew",
+    "pp": "grown",
+    "es": "to get bigger, to cultivate"
+  },
+  {
+    "base": "have",
+    "past": "had",
+    "pp": "had",
+    "es": "to own, to possess"
+  },
+  {
+    "base": "hear",
+    "past": "heard",
+    "pp": "heard",
+    "es": "to perceive sound"
+  },
+  {
+    "base": "hurt",
+    "past": "hurt",
+    "pp": "hurt",
+    "es": "to cause pain"
+  },
+  {
+    "base": "keep",
+    "past": "kept",
+    "pp": "kept",
+    "es": "to hold on to"
+  },
+  {
+    "base": "know",
+    "past": "knew",
+    "pp": "known",
+    "es": "to be aware of"
+  },
+  {
+    "base": "lead",
+    "past": "led",
+    "pp": "led",
+    "es": "to guide"
+  },
+  {
+    "base": "learn",
+    "past": "learnt / learned",
+    "pp": "learnt / learned",
+    "es": "to gain knowledge"
+  },
+  {
+    "base": "leave",
+    "past": "left",
+    "pp": "left",
+    "es": "to depart"
+  },
+  {
+    "base": "lend",
+    "past": "lent",
+    "pp": "lent",
+    "es": "to loan"
+  },
+  {
+    "base": "let",
+    "past": "let",
+    "pp": "let",
+    "es": "to allow"
+  },
+  {
+    "base": "lose",
+    "past": "lost",
+    "pp": "lost",
+    "es": "to misplace, to be defeated"
+  },
+  {
+    "base": "make",
+    "past": "made",
+    "pp": "made",
+    "es": "to create, to produce"
+  },
+  {
+    "base": "mean",
+    "past": "meant",
+    "pp": "meant",
+    "es": "to signify"
+  },
+  {
+    "base": "meet",
+    "past": "met",
+    "pp": "met",
+    "es": "to encounter"
+  },
+  {
+    "base": "mistake",
+    "past": "mistook",
+    "pp": "mistaken",
+    "es": "to confuse with something else"
+  },
+  {
+    "base": "pay",
+    "past": "paid",
+    "pp": "paid",
+    "es": "to give money for something"
+  },
+  {
+    "base": "put",
+    "past": "put",
+    "pp": "put",
+    "es": "to place"
+  },
+  {
+    "base": "read",
+    "past": "read",
+    "pp": "read",
+    "es": "to look at words and understand them"
+  },
+  {
+    "base": "ride",
+    "past": "rode",
+    "pp": "ridden",
+    "es": "to travel on a bike or horse"
+  },
+  {
+    "base": "run",
+    "past": "ran",
+    "pp": "run",
+    "es": "to move fast on foot"
+  },
+  {
+    "base": "say",
+    "past": "said",
+    "pp": "said",
+    "es": "to speak words"
+  },
+  {
+    "base": "see",
+    "past": "saw",
+    "pp": "seen",
+    "es": "to view with the eyes"
+  },
+  {
+    "base": "sell",
+    "past": "sold",
+    "pp": "sold",
+    "es": "to exchange for money"
+  },
+  {
+    "base": "send",
+    "past": "sent",
+    "pp": "sent",
+    "es": "to dispatch"
+  },
+  {
+    "base": "shut",
+    "past": "shut",
+    "pp": "shut",
+    "es": "to close"
+  },
+  {
+    "base": "sit",
+    "past": "sat",
+    "pp": "sat",
+    "es": "to rest on a seat"
+  },
+  {
+    "base": "sleep",
+    "past": "slept",
+    "pp": "slept",
+    "es": "to rest with eyes closed"
+  },
+  {
+    "base": "smell",
+    "past": "smelt / smelled",
+    "pp": "smelt / smelled",
+    "es": "to detect an odor"
+  },
+  {
+    "base": "speak",
+    "past": "spoke",
+    "pp": "spoken",
+    "es": "to talk"
+  },
+  {
+    "base": "spend",
+    "past": "spent",
+    "pp": "spent",
+    "es": "to use money or time"
+  },
+  {
+    "base": "stand",
+    "past": "stood",
+    "pp": "stood",
+    "es": "to be upright"
+  },
+  {
+    "base": "steal",
+    "past": "stole",
+    "pp": "stolen",
+    "es": "to take without permission"
+  },
+  {
+    "base": "swim",
+    "past": "swam",
+    "pp": "swum",
+    "es": "to move through water"
+  },
+  {
+    "base": "take",
+    "past": "took",
+    "pp": "taken",
+    "es": "to grab, to carry away"
+  },
+  {
+    "base": "teach",
+    "past": "taught",
+    "pp": "taught",
+    "es": "to instruct"
+  },
+  {
+    "base": "tell",
+    "past": "told",
+    "pp": "told",
+    "es": "to inform, to narrate"
+  },
+  {
+    "base": "think",
+    "past": "thought",
+    "pp": "thought",
+    "es": "to use the mind, to believe"
+  },
+  {
+    "base": "throw",
+    "past": "threw",
+    "pp": "thrown",
+    "es": "to hurl"
+  },
+  {
+    "base": "understand",
+    "past": "understood",
+    "pp": "understood",
+    "es": "to grasp the meaning"
+  },
+  {
+    "base": "wake",
+    "past": "woke",
+    "pp": "woken",
+    "es": "to stop sleeping"
+  },
+  {
+    "base": "wear",
+    "past": "wore",
+    "pp": "worn",
+    "es": "to have clothes on"
+  },
+  {
+    "base": "win",
+    "past": "won",
+    "pp": "won",
+    "es": "to come first"
+  },
+  {
+    "base": "write",
+    "past": "wrote",
+    "pp": "written",
+    "es": "to put words on paper"
+  },
+  {
+    "base": "tread",
+    "past": "trod",
+    "pp": "trodden",
+    "es": "to step on, to walk on",
+    "note": "“Trod” is the usual simple past of “tread”. “Trode” is a historical or rare form."
+  }
+]
