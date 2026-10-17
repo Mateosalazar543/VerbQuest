@@ -14,7 +14,7 @@
   async function api(action,data={}){
     let response;
     try{response=await fetch(`/api/${action}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
-    catch{throw Error('No se pudo conectar. Ejecuta npm start y abre la dirección del servidor, no el HTML directamente.');}
+    catch{throw Error('No se pudo conectar al servidor. Si estás en Render Free, espera unos 60 segundos y vuelve a intentarlo.');}
     const result=await response.json();
     if(!response.ok)throw Error(result.error||'Error de conexión.');
     return result;
