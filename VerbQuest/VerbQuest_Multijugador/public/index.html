@@ -194,6 +194,8 @@
     .result-stat span { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; }
     .result-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     footer { padding: 22px; text-align: center; font-size: .78rem; color: #8b90ad; }
+    .footer-credits { display: block; margin-top: 7px; font-size: .75rem; line-height: 1.65; color: #6a6f8f; }
+    .footer-credits strong { color: #5141ac; font-weight: 700; }
 
     .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
     .confetti i { position: absolute; top: -14px; width: 9px; height: 15px; border-radius: 2px; animation: fall linear both; }
@@ -526,7 +528,10 @@
         </div>
       </section>
     </main>
-    <footer>VerbQuest · Learn English at your own pace ✦</footer>
+    <footer aria-label="Site credits">
+      <span>VerbQuest · Learn English at your own pace ✦</span>
+      <span class="footer-credits">© 2026 <strong>Mateo Salazar Bogota</strong> · Pontificia Universidad Javeriana · Bogotá, Colombia</span>
+    </footer>
   </div>
 
   <script>
