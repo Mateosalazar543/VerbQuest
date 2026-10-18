@@ -432,7 +432,14 @@
         font-size: .77rem;
       }
       #gameScreen .answer-label, #onlineGameScreen .answer-label {
-        width: 100%; text-align: center; min-width: 0; overflow-wrap: anywhere;
+        width: 100%; text-align: center; min-width: 0;
+        overflow-wrap: anywhere; text-wrap: balance;
+      }
+      /* Las variantes con barra se distribuyen en 2 líneas dentro de su casilla,
+         sin hacer que todas las respuestas se vuelvan tarjetas gigantes. */
+      #gameScreen .answers:not(.answers-detailed) .answer,
+      #onlineGameScreen .answers:not(.answers-detailed) .answer {
+        min-height: 105px;
       }
       #gameScreen .answer-symbol, #onlineGameScreen .answer-symbol {
         position: absolute; top: 7px; right: 9px; margin: 0; font-size: 1rem;
@@ -1510,12 +1517,16 @@
       }
     });
 
-    /* 4.3: selecciona una distribución móvil legible sin alterar las respuestas. */
+    /* 4.3.1: las variantes breves ("Dreamt / Dreamed", "Learnt / Learned")
+       siguen en 2×2. Solo las opciones que contienen varias formas u oraciones
+       necesitan tarjetas de ancho completo, en ambos modos de juego. */
     const applyMobileAnswerLayout = container => {
       const labels = [...container.querySelectorAll('.answer-label')]
         .map(el => el.textContent.trim());
-      container.classList.toggle('answers-detailed', labels.some(label =>
-        label.length > 14 || label.includes('→') || label.includes('\n')));
+      const hasMultiPartChallenge = labels.some(label =>
+        label.includes('→') || label.includes('\n') ||
+        label.length > 32 || label.split(/\s+/).length > 5);
+      container.classList.toggle('answers-detailed', hasMultiPartChallenge);
     };
     for (const answerId of ['answers', 'onlineAnswers']) {
       const container = $(answerId);
