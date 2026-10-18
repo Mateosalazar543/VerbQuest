@@ -223,6 +223,9 @@
       .game-bottom { position: sticky; bottom: 0; z-index: 5; margin: 16px -18px 0; padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
         background: linear-gradient(to top, #fff 70%, #fff0); border-radius: 0 0 26px 26px; }
       .game-bottom .btn { width: 100%; }
+      /* Sin respuesta seleccionada, no tapar la última opción en móvil. */
+      #gameScreen .game-bottom:has(#nextButton[hidden]) { position: static; margin: 12px -18px 0;
+        padding: 0 18px 20px; background: transparent; }
       .feedback { scroll-margin-bottom: 110px; }
       .results { padding: 36px 18px; }
     }
@@ -245,7 +248,7 @@
     .mastery-mini p { font-size: .79rem; color: var(--muted); margin: 7px 0 0; }
     .mini-progress { height: 8px; border-radius: 99px; background: #e9e6f8; overflow: hidden; margin-top: 10px; }
     .mini-progress > div { height: 100%; border-radius: inherit; background: linear-gradient(90deg,#826aff,#19c39c); transition: width .45s ease; }
-    .question-word.context-word { font-size: clamp(1.45rem, 4.1vw, 2.5rem); letter-spacing: -.035em; line-height: 1.4; max-width: 780px; margin: 18px auto; }
+    .question-word.context-word { white-space: pre-line; font-size: clamp(1.45rem, 4.1vw, 2.5rem); letter-spacing: -.035em; line-height: 1.4; max-width: 780px; margin: 18px auto; }
     .mistakes-section, .mastery-overview { margin: 27px auto 0; text-align: left; max-width: 680px; padding: 22px; border-radius: 22px; background: #f8f7ff; border: 1px solid #e9e5ff; }
     .summary-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
     .summary-top h3 { font-size: 1.08rem; margin: 0; letter-spacing: -.02em; }
@@ -348,7 +351,7 @@
         </div>
         <div class="settings">
           <div class="section-top"><h2>Set up your challenge</h2><span id="bankCount" class="pill">Loading…</span></div>
-          <p class="muted">Choose how you want to study. Every question has four options and reveals all three forms once you answer.</p>
+          <p class="muted">Choose how you want to study. Every question has four options and reveals all three forms once you answer. Ten-question sessions adapt faster, while longer sessions progress more gradually.</p>
           <div class="controls">
             <div class="control">
               <label for="modeSelect">Practice type</label>
@@ -634,14 +637,13 @@
     const MODES = ['past', 'participle', 'base'];
     const LEVELS = ['Starter', 'Explorer', 'Practitioner', 'Advanced', 'Expert'];
     const STORE_KEY = 'verbquest_mastery_v1';
-    const CORRECT_TO_LEVEL_UP = 2;
     let progress = loadProgress();
     const state = {
       questions: [], index: 0, correct: 0, points: 0, streak: 0, bestStreak: 0,
       answered: false, timeLimit: 0, timerId: null, deadline: 0,
       difficulty: 1, highestDifficulty: 1, correctTowardLevel: 0,
       practiceMode: 'mixed', isReview: false, reviewStartCount: 0,
-      mistakes: new Map(), expandedMistakes: false
+      mistakes: new Map(), expandedMistakes: false, runLength: 20
     };
 
     // Cargamos y guardamos solo estadísticas; las respuestas del banco siguen en el archivo.
@@ -750,17 +752,35 @@
       return weightedPick(MODES, mode => 2 + (100 - scoreFor(verb, mode)) / 25
         + Math.min(4, numeric(statsFor(verb, mode).errors)));
     }
+    /* Cada tamaño de sesión tiene su propia curva de aprendizaje.
+       En 10 preguntas: L1→L2 y L2→L3 con 1 acierto; L3→L4 y L4→L5 con 2.
+       En 20: 2 aciertos por nivel; en 40/80: 3 por nivel. */
+    function answersToLevelUp(level = state.difficulty) {
+      if (state.isReview) return 2;
+      if (state.runLength === 10) return level <= 2 ? 1 : 2;
+      return state.runLength >= 40 ? 3 : 2;
+    }
+    function startingDifficulty() {
+      if (state.runLength !== 10) return 1;
+      // El dominio consolidado en partidas anteriores evita obligar al alumno
+      // experimentado a comenzar siempre desde Starter.
+      let consolidated = 0;
+      VERBS.forEach(verb => MODES.forEach(mode => {
+        if (attemptFor(verb, mode) >= 3 && scoreFor(verb, mode) >= 70) consolidated++;
+      }));
+      return consolidated >= 35 ? 3 : consolidated >= 12 ? 2 : 1;
+    }
     function updateDifficultyBadge() {
       const badge = $('difficultyLabel');
       badge.dataset.level = String(state.difficulty);
       badge.textContent = `⚡ L${state.difficulty} · ${LEVELS[state.difficulty - 1]}`;
-      badge.title = state.difficulty === 5 ? 'Expert challenge: context, pairs and deceptive options'
-        : `${state.correctTowardLevel}/2 correct answers toward the next level`;
+      badge.title = state.difficulty === 5 ? 'Expert challenge: context, triple forms and deceptive options'
+        : `${state.correctTowardLevel}/${answersToLevelUp()} correct answers toward the next level`;
     }
     function adjustDifficulty(correct) {
       const before = state.difficulty;
       if (correct) {
-        if (state.difficulty < 5 && ++state.correctTowardLevel >= CORRECT_TO_LEVEL_UP) {
+        if (state.difficulty < 5 && ++state.correctTowardLevel >= answersToLevelUp()) {
           state.difficulty++;
           state.correctTowardLevel = 0;
         }
@@ -782,7 +802,7 @@
       } else if (state.difficulty === 5) {
         display.textContent = '🏆 Expert level! Can you outsmart the traps?';
       } else {
-        display.textContent = `✨ ${2 - state.correctTowardLevel} more correct answer(s) to level up.`;
+        display.textContent = `✨ ${answersToLevelUp() - state.correctTowardLevel} more correct answer(s) to level up.`;
       }
     }
 
@@ -816,34 +836,47 @@
     }
     function chooseDistractors(correct, key, verb, level) {
       const candidates = new Set();
+      // Palabras reales del banco, incluyendo las de otras columnas solo desde L3.
       VERBS.forEach(v => { if (v !== verb) candidates.add(v[key]); });
-      if (level >= 2) {
-        // Distractores que pertenecen al MISMO verbo, pero a otra columna.
-        ['base', 'past', 'pp'].filter(k => k !== key).forEach(k => candidates.add(verb[k]));
+      if (level >= 3) VERBS.forEach(v => {
+        if (v !== verb) { candidates.add(v.past); candidates.add(v.pp); candidates.add(v.base); }
+      });
+      const internal = ['base', 'past', 'pp'].filter(k => k !== key)
+        .map(k => verb[k]).filter(v => !isAccepted(v, correct));
+      const fakeForms = [regularTrap(verb.base)];
+      // Errores verosímiles: regularización, terminación incorrecta o confusión de tiempos.
+      if (key !== 'base') {
+        // Una terminación confundible (p. ej., written → writte) y
+        // una regularización simple son trampas más útiles que "wroteed".
+        if (verb.pp.endsWith('en')) fakeForms.push(verb.pp.slice(0, -1));
+        if (/(.)\1/.test(verb.pp)) fakeForms.push(verb.pp.replace(/(.)\1/g, '$1'));
       }
-      if (level >= 3) {
-        candidates.add(regularTrap(verb.base));
-        VERBS.forEach(v => { if (v !== verb) { candidates.add(v.past); candidates.add(v.pp); } });
-      }
-      const pool = shuffle([...candidates].filter(v => v !== correct && !isAccepted(v, correct)));
-      pool.sort((a, b) => similarity(b, correct) - similarity(a, correct));
-      // L1 separa, L5 prioriza trampas visualmente semejantes y formas del mismo verbo.
-      const positions = [
-        [.72, .84, .95], [.20, .50, .73], [.03, .13, .32], [0, .04, .12], [0, .015, .035]
-      ][level - 1];
+      if (level >= 2) internal.forEach(v => candidates.add(v));
+      if (level >= 3) fakeForms.forEach(v => candidates.add(v));
+      const eligible = value => value !== correct && !isAccepted(value, correct) && value.trim().length > 0;
+      const sorted = shuffle([...candidates].filter(eligible))
+        .sort((a, b) => similarity(b, correct) - similarity(a, correct));
       const chosen = [];
-      for (const fraction of positions) {
-        const target = Math.min(pool.length - 1, Math.floor(fraction * (pool.length - 1)));
-        const ordered = [...pool].sort((a, b) => Math.abs(pool.indexOf(a) - target) - Math.abs(pool.indexOf(b) - target));
-        const pick = ordered.find(v => !chosen.includes(v));
-        if (pick !== undefined) chosen.push(pick);
+      const add = value => { if (value && eligible(value) && !chosen.includes(value)) chosen.push(value); };
+      // L4/L5 combinan deliberadamente trampas de la misma conjugación,
+      // irregularidades inventadas y palabras visualmente muy semejantes.
+      if (level >= 4) {
+        add(internal.sort((a,b) => similarity(b,correct)-similarity(a,correct))[0]);
+        const fake = fakeForms.filter(eligible).sort((a,b) => similarity(b,correct)-similarity(a,correct))[0];
+        if (key !== 'base') add(fake);
+      } else if (level === 3) {
+        add(internal[0]);
       }
-      // Desde L3 fuerza al menos una trampa tomada del mismo verbo cuando exista.
-      if (level >= 3) {
-        const internal = ['base', 'past', 'pp'].filter(k => k !== key)
-          .map(k => verb[k]).find(v => !isAccepted(v, correct));
-        if (internal && !chosen.includes(internal)) chosen[2] = internal;
+      const fractions = [ [.72,.85,.96], [.19,.45,.70], [.04,.18,.36], [.01,.06,.18], [0,.015,.035] ][level-1];
+      for (const f of fractions) {
+        if (chosen.length >= 3) break;
+        const pos = Math.min(sorted.length-1, Math.floor((sorted.length-1)*f));
+        for (let offset=0; offset<sorted.length; offset++) {
+          const candidate = sorted[Math.min(sorted.length-1, pos+offset)];
+          if (candidate && !chosen.includes(candidate)) { add(candidate); break; }
+        }
       }
+      sorted.forEach(value => { if (chosen.length < 3) add(value); });
       if (chosen.length !== 3 || new Set(chosen).size !== 3)
         throw new Error(`Not enough unique distractors for ${verb.base}`);
       return chosen;
@@ -939,47 +972,85 @@
         options: shuffle([correctAnswer, ...chooseDistractors(correctAnswer, index ? 'pp' : 'past', verb, level)]),
         context: true};
     }
-    function makePairQuestion(verb, level) {
-      const correctAnswer = `${verb.past} → ${verb.pp}`;
+    function makePairOptions(verb) {
+      const correct = `${verb.past} → ${verb.pp}`;
       const raw = [
-        `${verb.pp} → ${verb.past}`,
-        `${verb.base} → ${verb.pp}`,
-        `${verb.past} → ${verb.base}`,
-        `${regularTrap(verb.base)} → ${verb.pp}`,
+        `${verb.pp} → ${verb.past}`, `${verb.base} → ${verb.pp}`,
+        `${verb.past} → ${verb.base}`, `${regularTrap(verb.base)} → ${verb.pp}`,
         `${verb.past} → ${regularTrap(verb.base)}`
       ];
       const nearPast = chooseDistractors(verb.past, 'past', verb, 5);
       const nearPP = chooseDistractors(verb.pp, 'pp', verb, 5);
       nearPast.forEach(v => raw.push(`${v} → ${verb.pp}`));
       nearPP.forEach(v => raw.push(`${verb.past} → ${v}`));
-      // No confundir con variantes aceptadas: p.ej. 'learnt / learned'.
-      const validPairs = text => {
+      const valid = text => {
         const [past, pp] = text.split(' → ');
-        return isAccepted(past, verb.past) && isAccepted(pp, verb.pp);
+        return isAccepted(past,verb.past) && isAccepted(pp,verb.pp);
       };
-      const pool = [...new Set(raw)].filter(v => v !== correctAnswer && !validPairs(v));
-      pool.sort((a, b) => similarity(b, correctAnswer) - similarity(a, correctAnswer));
-      const wrong = pool.slice(0, 3);
-      if (wrong.length < 3) throw new Error('Pair options are insufficient');
+      const wrong = shuffle([...new Set(raw)]).filter(v => v !== correct && !valid(v))
+        .sort((a,b) => similarity(b,correct)-similarity(a,correct)).slice(0,3);
+      if (wrong.length !== 3) throw new Error('Pair options are insufficient');
+      return {correctAnswer:correct,options:shuffle([correct,...wrong])};
+    }
+    function makePairQuestion(verb, level) {
       return {
-        verb, mode: 'both', level, type: level === 5 ? 'Expert · Double trap' : 'Two-form challenge',
-        title: level === 5 ? 'Only ONE pair is correct. Spot the traps!' : 'Choose the correct past → participle pair.',
-        word: verb.base, subtitle: level < 4 ? `Simple past → Past participle · ${verb.es}` : 'Simple past → Past participle',
-        correctAnswer, options: shuffle([correctAnswer, ...wrong]), context: false
+        verb, mode:'both', level, type:level === 5 ? 'Expert · Double trap' : 'Two-form challenge',
+        title:level === 5 ? 'Only ONE pair is correct. Spot the traps!' : 'Choose the correct past → participle pair.',
+        word:verb.base, subtitle:level < 4 ? `Simple past → Past participle · ${verb.es}` : 'Simple past → Past participle',
+        ...makePairOptions(verb), context:false
       };
+    }
+    function makeDoubleContextQuestion(verb, level) {
+      return {
+        verb, mode:'both', level, type:level === 5 ? 'Expert · Two gaps' : 'Advanced · Two gaps',
+        title:'Complete BOTH sentences: simple past → past participle.',
+        word:SENTENCES[verb.base].join('\n'),
+        subtitle:'Choose the pair that fits the two gaps in order.',
+        ...makePairOptions(verb), context:true
+      };
+    }
+    function makeTripleQuestion(verb, level) {
+      const correctAnswer = `${verb.base} → ${verb.past} → ${verb.pp}`;
+      const raw = [
+        `${verb.base} → ${verb.pp} → ${verb.past}`,
+        `${verb.base} → ${verb.base} → ${verb.pp}`,
+        `${verb.base} → ${verb.past} → ${verb.base}`,
+        `${verb.base} → ${regularTrap(verb.base)} → ${verb.pp}`,
+        `${verb.base} → ${verb.past} → ${regularTrap(verb.base)}`
+      ];
+      chooseDistractors(verb.past, 'past', verb, 5).forEach(v => raw.push(`${verb.base} → ${v} → ${verb.pp}`));
+      chooseDistractors(verb.pp, 'pp', verb, 5).forEach(v => raw.push(`${verb.base} → ${verb.past} → ${v}`));
+      const isTrue = value => {
+        const [base,past,pp] = value.split(' → ');
+        return isAccepted(base,verb.base) && isAccepted(past,verb.past) && isAccepted(pp,verb.pp);
+      };
+      const wrong = shuffle([...new Set(raw)]).filter(value => value !== correctAnswer && !isTrue(value))
+        .sort((a,b) => similarity(b,correctAnswer)-similarity(a,correctAnswer)).slice(0,3);
+      if (wrong.length !== 3) throw new Error(`Triple options insufficient for ${verb.base}`);
+      return {verb,mode:'both',level,type:'Expert · Triple trap',
+        title:'Which complete sequence is 100% correct?',word:verb.base,
+        subtitle:'Base form → Simple past → Past participle',
+        correctAnswer,options:shuffle([correctAnswer,...wrong]),context:false};
     }
     function makeQuestion(item) {
       const {verb} = item, level = state.difficulty;
-      if ((item.mode === 'both' || (state.practiceMode === 'mixed' && !state.isReview
-          && !verb.modal && level >= 4 && Math.random() < (level === 5 ? .60 : .36)))) {
-        if (!verb.modal) return makePairQuestion(verb, level);
+      if (item.mode === 'both' && !verb.modal) return makePairQuestion(verb,level);
+      if (state.practiceMode === 'mixed' && !state.isReview && !verb.modal && level >= 4) {
+        const random = Math.random();
+        if (level === 5) {
+          if (SENTENCES[verb.base] && random < .42) return makeDoubleContextQuestion(verb,level);
+          if (random < .82) return makeTripleQuestion(verb,level);
+          return makePairQuestion(verb,level);
+        }
+        if (SENTENCES[verb.base] && random < .35) return makeDoubleContextQuestion(verb,level);
+        if (random < .66) return makePairQuestion(verb,level);
       }
       const mode = item.mode;
       if (level >= 3 && (mode === 'past' || mode === 'participle') && SENTENCES[verb.base]
-          && Math.random() < (level === 3 ? .35 : level === 4 ? .62 : .78)) {
-        return makeContextQuestion(verb, mode, level);
+          && Math.random() < (level === 3 ? .35 : level === 4 ? .70 : .85)) {
+        return makeContextQuestion(verb,mode,level);
       }
-      const question = makeStandardQuestion(verb, mode, level);
+      const question = makeStandardQuestion(verb,mode,level);
       if (level >= 4) question.subtitle = question.subtitle.split(' · ')[0];
       return question;
     }
@@ -990,7 +1061,8 @@
       state.questions = items;
       state.index = 0; state.correct = 0; state.points = 0;
       state.streak = 0; state.bestStreak = 0; state.answered = false;
-      state.difficulty = review ? 2 : 1;
+      state.runLength = items.length;
+      state.difficulty = review ? 2 : startingDifficulty();
       state.highestDifficulty = state.difficulty;
       state.correctTowardLevel = 0;
       state.isReview = review;
@@ -1097,8 +1169,15 @@
       $('feedbackTitle').textContent = isCorrect ? '✅ Correct! Nice work.'
         : ranOut ? '⏰ Time is up' : '💪 Almost! Review this one.';
       $('feedbackText').textContent = `${nice(q.verb.base)} → ${nice(q.verb.past)} → ${nice(q.verb.pp)}  ·  ${q.verb.es}`;
-      $('feedbackNote').hidden = !q.verb.note;
-      $('feedbackNote').textContent = q.verb.note || '';
+      const learningTip = q.level >= 4
+        ? q.type.includes('Triple trap')
+          ? 'Expert tip: check all three positions; a correct past does not guarantee a correct participle.'
+          : q.mode === 'both'
+            ? 'Grammar tip: yesterday / last week → simple past; have / has / had → past participle.'
+            : 'Watch out: some choices are other forms of the same verb or tempting regularizations.'
+        : '';
+      $('feedbackNote').textContent = [q.verb.note, learningTip].filter(Boolean).join(' ');
+      $('feedbackNote').hidden = !$('feedbackNote').textContent;
       adjustDifficulty(isCorrect);
       $('feedback').hidden = false;
       $('nextButton').textContent = state.index + 1 === state.questions.length
