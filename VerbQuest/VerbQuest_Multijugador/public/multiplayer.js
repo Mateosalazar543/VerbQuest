@@ -89,12 +89,12 @@
     $m('lobbyTitle').textContent=data.role==='admin'?'You are the room administrator 👑':'You are in! 🎉';
     $m('lobbyCode').textContent=data.code;
     $m('lobbyStatus').textContent=`${data.joined}/${data.capacity} players`;
-    $m('lobbyDetails').textContent=`${data.joined} registered / ${data.capacity} maximum · ${data.required} required to start · ${data.duration} min total · ${data.mode} mode`;
+    $m('lobbyDetails').textContent=`${data.joined} joined · ${data.capacity} maximum capacity (not required) · ${data.duration} min total · ${data.mode} mode`;
     const host=data.role==='admin';
     $m('startOnlineButton').hidden=!host;
     $m('startOnlineButton').disabled=data.joined<data.required;
-    $m('startOnlineButton').textContent=data.joined<data.required?`Need ${data.required-data.joined} more player(s)`:'🚀 Start challenge';
-    $m('lobbyNote').textContent=host?(data.joined>=10?'✅ Enough players! You can start the competition.':'Invite at least 10 players before starting.'):'Waiting for the administrator to start. Keep this page open.';
+    $m('startOnlineButton').textContent=data.joined<data.required?'Waiting for first player…':`🚀 Start now (${data.joined} ${data.joined===1?'player':'players'})`;
+    $m('lobbyNote').textContent=host?(data.joined>=data.required?'✅ Ready! You can start now without filling the room.':'Share the code. The Start button unlocks as soon as one player joins.'):'Waiting for the administrator to start. The room does not need to be full.';
     const list=$m('lobbyPlayers');list.replaceChildren();
     data.players.forEach((p,i)=>{
       const item=document.createElement('div');item.className=`player-chip${p.online?'':' offline'}`;
@@ -233,7 +233,7 @@
   $m('startOnlineButton').addEventListener('click',async()=>{
     errorAt('lobbyError','');$m('startOnlineButton').disabled=true;
     try{await api('start',session);}catch(e){errorAt('lobbyError',e.message);}
-    finally{$m('startOnlineButton').disabled=false;}
+    finally{$m('startOnlineButton').disabled=!!view && (view.phase!=='lobby' || view.joined<view.required);}
   });
   $m('leaveLobbyButton').addEventListener('click',exitRoom);
   $m('leaveOnlineButton').addEventListener('click',exitRoom);
