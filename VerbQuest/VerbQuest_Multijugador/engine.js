@@ -3,7 +3,10 @@
 const crypto = require('node:crypto');
 const VERBS = require('./verbs.json');
 const MAX_ROOMS = 100;
-const MIN_PLAYERS = 10;
+// Minimum number of registered participants needed to start a match.
+// Room capacity (10–50) is a maximum, never an attendance requirement.
+const MIN_PLAYERS = 1;
+const MIN_CAPACITY = 10;
 const LEVELS = ['Starter', 'Explorer', 'Practitioner', 'Advanced', 'Expert'];
 const CODES = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const sentences = {
@@ -128,7 +131,7 @@ class GameService {
     this.cleanup();
     if(this.rooms.size>=MAX_ROOMS)throw new Error('El servidor alcanzó el límite de salas.');
     name=this.validateName(name);capacity=Number(capacity);duration=Number(duration);
-    if(!Number.isInteger(capacity)||capacity<MIN_PLAYERS||capacity>50)throw new Error('La capacidad debe ser de 10 a 50 jugadores.');
+    if(!Number.isInteger(capacity)||capacity<MIN_CAPACITY||capacity>50)throw new Error('La capacidad debe ser de 10 a 50 jugadores.');
     if(![1,2,3,5,10,15].includes(duration))throw new Error('Elige un tiempo entre 1 y 15 minutos.');
     if(!['mixed','past','participle','base'].includes(mode))throw new Error('Modo no válido.');
     const code=this.uniqueCode(),token=crypto.randomBytes(24).toString('hex');
@@ -152,7 +155,7 @@ class GameService {
     const {room,person}=this.auth(code,token);
     if(person.role!=='admin')throw new Error('Solo el administrador puede iniciar la partida.');
     if(room.phase!=='lobby')throw new Error('La sala ya inició.');
-    if(room.players.length<MIN_PLAYERS)throw new Error(`Se necesitan al menos ${MIN_PLAYERS} jugadores para comenzar.`);
+    if(room.players.length<MIN_PLAYERS)throw new Error('Espera a que entre al menos un jugador antes de iniciar la partida.');
     room.phase='playing';room.startedAt=this.now()+3000;room.endsAt=room.startedAt+room.duration*60000;
     for(const player of room.players) this.giveQuestion(room,player);
     this.broadcast(room);
