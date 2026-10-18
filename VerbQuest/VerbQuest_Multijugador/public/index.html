@@ -326,6 +326,185 @@
       .multiplayer-buttons .btn {flex: 1 1 160px;}
       .online-clock {font-size: 1.1rem;}
     }
+
+
+    /* ==== VerbQuest 4.3: ergonomía del quiz en pantallas táctiles ==== */
+    .exit-short { display: none; }
+
+    @media (max-width: 720px) {
+      /* Conserva la identidad visual; simplifica la vista durante el juego. */
+      .app { width: min(100% - 20px, 580px); }
+      .topbar { margin-bottom: 13px; }
+      .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
+      #gameScreen, #onlineGameScreen { position: relative; padding: 18px 16px 22px; border-radius: 25px; }
+
+      #gameScreen .game-top { display: block; }
+      #gameScreen .game-top > div:first-child { padding-right: 100px; }
+      #gameScreen .game-top .eyebrow, #onlineGameScreen .online-top .eyebrow {
+        margin-bottom: 3px; font-size: .67rem; letter-spacing: .055em;
+      }
+      #gameScreen #gameTitle, #onlineGameScreen #onlineGameHeading {
+        font-size: clamp(1.12rem, 4.9vw, 1.32rem); line-height: 1.3; margin: 0;
+      }
+      #gameScreen .solo-toolbar { position: absolute; top: 18px; right: 16px; margin: 0; z-index: 2; }
+      #gameScreen .solo-toolbar .btn-quiet {
+        min-height: 38px; padding: 8px 12px; border-radius: 12px;
+        font-size: .78rem; box-shadow: 0 3px 12px #6442d00a;
+      }
+      .exit-long { display: none; }
+      .exit-short { display: inline; }
+
+      #gameScreen .game-top .stats, #onlineGameScreen .stats {
+        display: grid; grid-template-columns: 1.3fr 1fr 1fr;
+        width: 100%; gap: 7px; margin-top: 15px !important;
+        justify-content: stretch !important; align-items: stretch;
+      }
+      #gameScreen .stat, #onlineGameScreen .stat {
+        display: flex; align-items: center; justify-content: center;
+        min-height: 43px; padding: 7px 5px; text-align: center;
+        font-size: clamp(.66rem, 2.75vw, .79rem); line-height: 1.28;
+        white-space: normal; border-radius: 12px; overflow-wrap: anywhere;
+      }
+      #gameScreen .stat.difficulty-stat, #onlineGameScreen .stat.difficulty-stat {
+        letter-spacing: -.025em;
+      }
+      #onlineGameScreen .online-top {
+        display: grid; grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center; gap: 10px;
+      }
+      #onlineGameScreen .online-clock {
+        padding: 8px 10px; border-radius: 12px; background: #f1edff;
+        font-size: .98rem; letter-spacing: -.03em; white-space: nowrap;
+      }
+
+      #gameScreen .progress-meta, #onlineGameScreen .progress-meta {
+        margin: 17px 0 7px; font-size: .74rem; line-height: 1.4;
+      }
+      #gameScreen .progress-track, #onlineGameScreen .progress-track { height: 7px; }
+      #gameScreen .timer-row { margin: 14px 0 -3px; gap: 9px; }
+      #gameScreen .timer-label { font-size: .78rem; min-width: 58px; }
+      #gameScreen .timer-track { height: 7px; }
+
+      /* La pregunta se convierte en una tarjeta visual y fácil de leer. */
+      #gameScreen .question-area, #onlineGameScreen .question-area {
+        margin: 16px 0 14px; padding: 20px 13px 18px;
+        background: linear-gradient(135deg, #f8f5ff 0%, #f3faff 100%);
+        border: 1px solid #eae5ff; border-radius: 21px;
+        text-align: center;
+      }
+      #gameScreen .question-type, #onlineGameScreen .question-type {
+        margin-bottom: 11px; padding: 6px 12px; font-size: .69rem;
+      }
+      #gameScreen .question-area h3, #onlineGameScreen .question-area h3 {
+        font-size: clamp(.91rem, 3.8vw, 1.07rem);
+        line-height: 1.45; font-weight: 700; letter-spacing: -.02em;
+        max-width: 34ch; margin: 0 auto 10px;
+      }
+      #gameScreen .question-word, #onlineGameScreen .question-word {
+        margin: 10px auto; font-size: clamp(2.18rem, 9vw, 3.1rem);
+        line-height: 1.16; letter-spacing: -.055em;
+      }
+      #gameScreen .question-word.context-word, #onlineGameScreen .question-word.context-word {
+        font-size: clamp(1.12rem, 4.55vw, 1.52rem);
+        line-height: 1.48; letter-spacing: -.023em;
+        margin: 13px auto; white-space: pre-line;
+      }
+      #gameScreen .question-subtitle, #onlineGameScreen .question-subtitle {
+        font-size: .75rem; line-height: 1.5; overflow-wrap: anywhere;
+      }
+
+      /* Opciones breves: 2 x 2. Trampas largas: 4 filas horizontales. */
+      #gameScreen .answers, #onlineGameScreen .answers {
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px; align-items: stretch;
+      }
+      #gameScreen .answer, #onlineGameScreen .answer {
+        position: relative; min-width: 0; min-height: 94px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        text-align: center; gap: 8px; padding: 12px 8px;
+        font-size: clamp(.86rem, 3.35vw, .98rem); line-height: 1.32;
+        border-radius: 17px; border-width: 2px;
+        box-shadow: 0 3px 13px rgba(89, 68, 216, .035);
+        touch-action: manipulation;
+      }
+      #gameScreen .answer .letter, #onlineGameScreen .answer .letter {
+        flex: 0 0 30px; width: 30px; height: 30px; border-radius: 10px;
+        font-size: .77rem;
+      }
+      #gameScreen .answer-label, #onlineGameScreen .answer-label {
+        width: 100%; text-align: center; min-width: 0; overflow-wrap: anywhere;
+      }
+      #gameScreen .answer-symbol, #onlineGameScreen .answer-symbol {
+        position: absolute; top: 7px; right: 9px; margin: 0; font-size: 1rem;
+      }
+      #gameScreen .answers.answers-detailed, #onlineGameScreen .answers.answers-detailed {
+        grid-template-columns: minmax(0, 1fr); gap: 9px;
+      }
+      #gameScreen .answers.answers-detailed .answer,
+      #onlineGameScreen .answers.answers-detailed .answer {
+        min-height: 62px; display: flex; flex-direction: row; align-items: center;
+        justify-content: flex-start; gap: 12px; padding: 10px 13px;
+        font-size: .91rem; text-align: left;
+      }
+      #gameScreen .answers.answers-detailed .answer-label,
+      #onlineGameScreen .answers.answers-detailed .answer-label {
+        width: auto; text-align: left;
+      }
+      #gameScreen .answers.answers-detailed .answer-symbol,
+      #onlineGameScreen .answers.answers-detailed .answer-symbol {
+        position: static; margin-left: auto; flex: none;
+      }
+
+      #gameScreen .feedback, #onlineGameScreen .feedback {
+        margin-top: 16px; padding: 14px 15px;
+        border-radius: 16px; scroll-margin-bottom: 95px;
+      }
+      #gameScreen .feedback h3, #onlineGameScreen .feedback h3 { font-size: .94rem; }
+      #gameScreen .feedback p, #onlineGameScreen .feedback p {
+        font-size: .81rem; line-height: 1.55; overflow-wrap: anywhere;
+      }
+      #gameScreen .feedback .difficulty-feedback { font-size: .79rem; }
+
+      /* Evita la franja blanca vacía antes de responder. */
+      #gameScreen .game-bottom:has(#nextButton[hidden]) { display: none; }
+      #gameScreen .game-bottom {
+        position: sticky; bottom: 0; z-index: 8; display: flex;
+        margin: 14px -16px -22px; padding: 13px 16px calc(14px + env(safe-area-inset-bottom));
+        background: linear-gradient(to bottom, #fffffff2, #fff);
+        border-top: 1px solid #ece9fa; border-radius: 0 0 25px 25px;
+        box-shadow: 0 -10px 25px rgba(46, 33, 124, .055);
+      }
+      #gameScreen .game-bottom .btn { width: 100%; min-height: 52px; border-radius: 14px; }
+      #onlineGameScreen #onlineQuestionContainer > .online-actions:has(#onlineNextButton[hidden]) { display: none; }
+      #onlineGameScreen #onlineQuestionContainer > .online-actions {
+        position: sticky; bottom: 0; z-index: 8; margin: 14px -16px 0;
+        padding: 13px 16px calc(14px + env(safe-area-inset-bottom));
+        background: linear-gradient(to bottom, #fffffff2, #fff);
+        border-top: 1px solid #ece9fa;
+      }
+      #onlineGameScreen #onlineNextButton { width: 100%; min-height: 52px; }
+      #onlineGameScreen .online-board { margin-top: 22px; padding: 14px; }
+    }
+
+    @media (max-width: 360px) {
+      #gameScreen .game-top > div:first-child { padding-right: 90px; }
+      #gameScreen .stat, #onlineGameScreen .stat { font-size: .66rem; padding: 7px 3px; }
+      #gameScreen .question-area, #onlineGameScreen .question-area { padding: 16px 10px; }
+      #gameScreen .answer, #onlineGameScreen .answer { min-height: 89px; }
+      #gameScreen .solo-toolbar .btn-quiet { padding: 8px 9px; }
+    }
+
+    /* En pantallas táctiles, no dejar botones falsamente resaltados por :hover. */
+    @media (hover: none) and (pointer: coarse) {
+      .answer:hover:not(:disabled) {
+        background: #fbfbff; border-color: #e7e8fa;
+        transform: none; box-shadow: none;
+      }
+      .answer:hover:not(:disabled) .letter {
+        background: #eceefb; color: #737a9f; transform: none;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -407,7 +586,7 @@
           <div><p class="eyebrow">Challenge in progress</p><h2 id="gameTitle">You can do it! 🚀</h2></div>
           <div class="stats"><span class="stat difficulty-stat" id="difficultyLabel" data-level="1" aria-live="polite">⚡ L1 · Starter</span><span class="stat" id="pointsLabel">⭐ 0 pts</span><span class="stat streak" id="streakLabel">🔥 0 streak</span></div>
         </div>
-        <div class="solo-toolbar"><button id="exitSoloButton" class="btn-quiet" type="button">← Exit to home</button></div>
+        <div class="solo-toolbar"><button id="exitSoloButton" class="btn-quiet" type="button" aria-label="Exit to home"><span aria-hidden="true">←</span> <span class="exit-long">Exit to home</span><span class="exit-short">Exit</span></button></div>
         <div class="progress-meta"><span id="questionCounter">Question 1 of 10</span><span id="progressLabel">0% complete</span></div>
         <div class="progress-track" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
           <div class="progress-fill" id="progressFill"></div>
@@ -1330,6 +1509,20 @@
         event.preventDefault(); nextQuestion();
       }
     });
+
+    /* 4.3: selecciona una distribución móvil legible sin alterar las respuestas. */
+    const applyMobileAnswerLayout = container => {
+      const labels = [...container.querySelectorAll('.answer-label')]
+        .map(el => el.textContent.trim());
+      container.classList.toggle('answers-detailed', labels.some(label =>
+        label.length > 14 || label.includes('→') || label.includes('\n')));
+    };
+    for (const answerId of ['answers', 'onlineAnswers']) {
+      const container = $(answerId);
+      new MutationObserver(() => applyMobileAnswerLayout(container))
+        .observe(container, {childList: true});
+    }
+
   </script>
   <script src="./multiplayer.js"></script>
 </body>
