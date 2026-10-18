@@ -191,7 +191,7 @@ Antes de una competencia, abre la web unos minutos antes, comprueba que el servi
 
 ## 🎓 Autor y créditos
 
-**Mateo Salazar**  
+**Mateo Salazar Bogota**  
 **Pontificia Universidad Javeriana**  
 **Bogotá, Colombia — 2026**
 
