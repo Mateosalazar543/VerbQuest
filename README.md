@@ -11,7 +11,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?logo=javascript&logoColor=black)
 ![Modalidades](https://img.shields.io/badge/modos-individual%20%7C%20multijugador-19C39C)
 
-**Desarrollado por Mateo Salazar**  
+**Desarrollado por Mateo Salazar Bogota**  
 **Pontificia Universidad Javeriana · Bogotá, Colombia · 2026**
 
 </div>
