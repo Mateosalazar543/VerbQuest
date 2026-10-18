@@ -54,62 +54,119 @@ function editDistance(a, b) {
   return line[b.length];
 }
 const sim = (a,b) => Math.max(...variants(a).flatMap(x=>variants(b).map(y=>1-editDistance(x,y)/Math.max(x.length,y.length,1))));
+// Las preguntas multijugador se validan y generan en el servidor.
+// En Advanced/Expert se combinan otras formas del verbo, errores morfológicos
+// y distractores próximos del banco de 80 verbos.
 function distractors(correct, key, verb, level) {
-  const pool = new Set(VERBS.filter(v => v !== verb).map(v => v[key]));
-  if (level>=2) for(const k of ['base','past','pp']) if(k!==key) pool.add(verb[k]);
-  if (level>=3) {
-    pool.add(fakeRegular(verb.base));
-    for(const v of VERBS) { if(v!==verb) {pool.add(v.past);pool.add(v.pp);} }
+  const pool=new Set(VERBS.filter(v=>v!==verb).map(v=>v[key]));
+  if(level>=3) for(const v of VERBS) if(v!==verb) {
+    pool.add(v.base);pool.add(v.past);pool.add(v.pp);
   }
-  const ordered = shuffle([...pool].filter(x=>x!==correct && !accepted(x,correct)));
-  ordered.sort((a,b)=>sim(b,correct)-sim(a,correct));
-  const positions = [ [.75,.86,.97],[.23,.53,.8],[.04,.18,.3],[0,.045,.10],[0,.015,.04] ][level-1];
+  const internal=['base','past','pp'].filter(k=>k!==key)
+    .map(k=>verb[k]).filter(x=>!accepted(x,correct));
+  const fakes=[fakeRegular(verb.base)];
+  if(key!=='base') {
+    if(verb.pp.endsWith('en')) fakes.push(verb.pp.slice(0,-1));
+    if(/(.)\1/.test(verb.pp)) fakes.push(verb.pp.replace(/(.)\1/g,'$1'));
+  }
+  if(level>=2) internal.forEach(x=>pool.add(x));
+  if(level>=3) fakes.forEach(x=>pool.add(x));
+  const eligible=x=>x && x!==correct && !accepted(x,correct);
+  const ordered=shuffle([...pool].filter(eligible)).sort((a,b)=>sim(b,correct)-sim(a,correct));
   const chosen=[];
-  for(const f of positions){
-    const goal=Math.floor((ordered.length-1)*f);
-    for(const v of [...ordered].sort((a,b)=>Math.abs(ordered.indexOf(a)-goal)-Math.abs(ordered.indexOf(b)-goal))) {
-      if(!chosen.includes(v)){chosen.push(v);break;}
+  const add=x=>{if(eligible(x)&&!chosen.includes(x))chosen.push(x);};
+  if(level>=4){
+    internal.sort((a,b)=>sim(b,correct)-sim(a,correct));
+    add(internal[0]);
+    if(key!=='base')add(fakes.filter(eligible).sort((a,b)=>sim(b,correct)-sim(a,correct))[0]);
+  }else if(level===3)add(internal[0]);
+  const positions=[[.72,.85,.96],[.19,.45,.70],[.04,.18,.36],[.01,.06,.18],[0,.015,.035]][level-1];
+  for(const frac of positions){
+    if(chosen.length>=3)break;
+    const position=Math.floor((ordered.length-1)*frac);
+    for(let offset=0;offset<ordered.length;offset++){
+      const value=ordered[Math.min(ordered.length-1,position+offset)];
+      if(value&&!chosen.includes(value)){add(value);break;}
     }
   }
-  if(level>=3){
-    const trap=['base','past','pp'].filter(k=>k!==key).map(k=>verb[k]).find(x=>!accepted(x,correct));
-    if(trap && !chosen.includes(trap)) chosen[2]=trap;
-  }
+  ordered.forEach(x=>{if(chosen.length<3)add(x);});
+  if(chosen.length!==3||new Set(chosen).size!==3)throw new Error(`Bad distractors for ${verb.base}`);
   return chosen;
 }
-function buildQuestion(verb, level, configuredMode) {
-  const modes = ['past','participle','base'];
-  const mode = configuredMode==='mixed' ? modes[crypto.randomInt(3)] : configuredMode;
-  const pair = level>=4 && configuredMode==='mixed' && !verb.modal && crypto.randomInt(100) < (level===5?64:36);
+function pairOptions(verb){
+  const answer=`${verb.past} → ${verb.pp}`;
+  const raw=[
+    `${verb.pp} → ${verb.past}`,`${verb.base} → ${verb.pp}`,
+    `${verb.past} → ${verb.base}`,`${fakeRegular(verb.base)} → ${verb.pp}`,
+    `${verb.past} → ${fakeRegular(verb.base)}`,
+    ...distractors(verb.past,'past',verb,5).map(x=>`${x} → ${verb.pp}`),
+    ...distractors(verb.pp,'pp',verb,5).map(x=>`${verb.past} → ${x}`)
+  ];
+  const valid=x=>{
+    const [past,pp]=x.split(' → ');
+    return accepted(past,verb.past)&&accepted(pp,verb.pp);
+  };
+  const wrong=shuffle([...new Set(raw)]).filter(x=>x!==answer&&!valid(x))
+    .sort((a,b)=>sim(b,answer)-sim(a,answer)).slice(0,3);
+  if(wrong.length!==3)throw new Error(`Insufficient pair options for ${verb.base}`);
+  return {answer,options:shuffle([answer,...wrong])};
+}
+function tripleOptions(verb){
+  const answer=`${verb.base} → ${verb.past} → ${verb.pp}`;
+  const raw=[
+    `${verb.base} → ${verb.pp} → ${verb.past}`,
+    `${verb.base} → ${verb.base} → ${verb.pp}`,
+    `${verb.base} → ${verb.past} → ${verb.base}`,
+    `${verb.base} → ${fakeRegular(verb.base)} → ${verb.pp}`,
+    `${verb.base} → ${verb.past} → ${fakeRegular(verb.base)}`,
+    ...distractors(verb.past,'past',verb,5).map(x=>`${verb.base} → ${x} → ${verb.pp}`),
+    ...distractors(verb.pp,'pp',verb,5).map(x=>`${verb.base} → ${verb.past} → ${x}`)
+  ];
+  const valid=x=>{
+    const [base,past,pp]=x.split(' → ');
+    return accepted(base,verb.base)&&accepted(past,verb.past)&&accepted(pp,verb.pp);
+  };
+  const wrong=shuffle([...new Set(raw)]).filter(x=>x!==answer&&!valid(x))
+    .sort((a,b)=>sim(b,answer)-sim(a,answer)).slice(0,3);
+  if(wrong.length!==3)throw new Error(`Insufficient triple options for ${verb.base}`);
+  return {answer,options:shuffle([answer,...wrong])};
+}
+function buildQuestion(verb,level,configuredMode){
+  const modes=['past','participle','base'];
+  const mode=configuredMode==='mixed'?modes[crypto.randomInt(3)]:configuredMode;
   let type,title,word,subtitle,answer,options,context=false;
-  if(pair) {
-    type= level===5 ? 'Expert · Double trap' : 'Two-form challenge';
+  const roll=crypto.randomInt(100);
+  const hard=level>=4 && configuredMode==='mixed' && !verb.modal;
+  const doubleContext=hard && sentences[verb.base] && roll<(level===5?40:35);
+  const triple=hard && level===5 && !doubleContext && roll<82;
+  const pair=hard && !doubleContext && !triple && (level===5 || roll<66);
+  if(doubleContext){
+    type=level===5?'Expert · Two gaps':'Advanced · Two gaps';
+    title='Complete BOTH sentences: simple past → past participle.';
+    word=sentences[verb.base].join('\n');
+    subtitle='Choose the pair that fits the two gaps in order.';
+    ({answer,options}=pairOptions(verb));context=true;
+  }else if(triple){
+    type='Expert · Triple trap';title='Which complete sequence is 100% correct?';
+    word=verb.base;subtitle='Base form → Simple past → Past participle';
+    ({answer,options}=tripleOptions(verb));
+  }else if(pair){
+    type=level===5?'Expert · Double trap':'Two-form challenge';
     title='Select the only correct past → participle pair.';
-    word=verb.base;
-    subtitle=level>=4?'Simple past → Past participle':verb.es;
-    answer=`${verb.past} → ${verb.pp}`;
-    const raw = [
-      `${verb.pp} → ${verb.past}`,`${verb.base} → ${verb.pp}`,
-      `${verb.past} → ${verb.base}`,`${fakeRegular(verb.base)} → ${verb.pp}`,
-      `${verb.past} → ${fakeRegular(verb.base)}`,
-      ...distractors(verb.past,'past',verb,5).map(x=>`${x} → ${verb.pp}`),
-      ...distractors(verb.pp,'pp',verb,5).map(x=>`${verb.past} → ${x}`)
-    ];
-    const wrong=[...new Set(raw)].filter(x=>{
-      const [past,pp]=x.split(' → ');
-      return x!==answer && !(accepted(past,verb.past)&&accepted(pp,verb.pp));
-    }).sort((a,b)=>sim(b,answer)-sim(a,answer)).slice(0,3);
-    options=shuffle([answer,...wrong]);
-  } else {
-    let key=mode;
+    word=verb.base;subtitle='Simple past → Past participle';
+    ({answer,options}=pairOptions(verb));
+  }else{
+    const key=mode==='participle'?'pp':mode;
     type=mode==='past'?'Simple past':mode==='participle'?'Past participle':'Base form';
     title=mode==='base'?'What is the base form?':`What is the ${type.toLowerCase()}?`;
-    word=mode==='base' ? (verb.modal?'could':(crypto.randomInt(2)===0?verb.past:verb.pp)):verb.base;
-    subtitle=level<=3 ? `Verb meaning: ${verb.es}` : 'Choose carefully: only one option is correct.';
-    key=mode==='participle'?'pp':mode;
+    word=mode==='base'?(verb.modal?'could':crypto.randomInt(2)===0?verb.past:verb.pp):verb.base;
+    subtitle=level<=3?`Verb meaning: ${verb.es}`:'Choose carefully: only one option is correct.';
     answer=verb[key];
-    if(verb.modal && mode==='participle'){type='Equivalent expression';title='Which expression expresses this ability in perfect tenses?';}
-    if(level>=3 && sentences[verb.base] && ['past','participle'].includes(mode) && crypto.randomInt(100)<(level===3?35:level===4?60:80)){
+    if(verb.modal&&mode==='participle'){
+      type='Equivalent expression';title='Which expression expresses this ability in perfect tenses?';
+    }
+    if(level>=3 && sentences[verb.base] && ['past','participle'].includes(mode)
+      && crypto.randomInt(100)<(level===3?35:level===4?70:85)){
       context=true;type=level===5?'Expert · Context':'Grammar in context';
       title='Choose the form that completes this sentence.';
       word=sentences[verb.base][mode==='past'?0:1];
@@ -117,8 +174,8 @@ function buildQuestion(verb, level, configuredMode) {
     }
     options=shuffle([answer,...distractors(answer,key,verb,level)]);
   }
-  if(options.length!==4 || new Set(options).size!==4 || options.filter(v=>v===answer).length!==1)
-    throw new Error('Invalid question options');
+  if(options.length!==4||new Set(options).size!==4||options.filter(v=>v===answer).length!==1)
+    throw new Error(`Invalid question options: ${verb.base}`);
   return {type,title,word,subtitle,options,correctIndex:options.indexOf(answer),answer,verb,context};
 }
 class GameService {
@@ -180,7 +237,12 @@ class GameService {
       if(p.level<5 && ++p.levelProgress>=2){p.level++;p.levelProgress=0;}
     } else {p.wrong++;p.streak=0;p.level=Math.max(1,p.level-1);p.levelProgress=0;}
     p.answered=true;
-    p.feedback={correct,chosenIndex:option,correctIndex:q.correctIndex,forms:`${q.verb.base} → ${q.verb.past} → ${q.verb.pp}`,meaning:q.verb.es,note:q.verb.note||'',points:p.score};
+    const tip=p.level>=4 ? q.type.includes('Triple trap')
+      ? 'Review the base → past → participle order.'
+      : (q.type.includes('trap')||q.type.includes('Two gaps')||q.type.includes('challenge'))
+        ? 'Yesterday takes simple past; have/has takes the participle.'
+        : 'Compare the verb forms: similar-looking options may be different tenses.' : '';
+    p.feedback={correct,chosenIndex:option,correctIndex:q.correctIndex,forms:`${q.verb.base} → ${q.verb.past} → ${q.verb.pp}`,meaning:q.verb.es,note:[q.verb.note,tip].filter(Boolean).join(' '),points:p.score};
     this.broadcast(room);
     return {correct};
   }
