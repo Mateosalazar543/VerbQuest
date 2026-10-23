@@ -767,6 +767,24 @@
       #gameScreen .answers:not(.answers-detailed) .answer, #onlineGameScreen .answers:not(.answers-detailed) .answer { min-height: 58px; flex-direction: row; justify-content: flex-start; text-align: left; gap: 10px; padding: 8px 12px; }
       #gameScreen .answer-label, #onlineGameScreen .answer-label { text-align: left; }
     }
+  
+    /* ==== Pulido del quiz multijugador (mismo comportamiento que el modo individual) ==== */
+    @media (min-width: 721px) {
+      #onlineGameScreen { padding: 34px 40px 36px; }
+      #onlineGameScreen #onlineQuestionContainer > .online-actions { position: sticky; bottom: 0; z-index: 6; margin: 18px -40px 0; padding: 14px 40px;
+        background: var(--paper); border-top: 2px solid var(--line); justify-content: flex-end; }
+      #onlineGameScreen #onlineQuestionContainer > .online-actions:has(#onlineNextButton[hidden]) { display: none; }
+      #onlineNextButton { min-width: 210px; }
+      #onlineGameScreen .online-board { margin-top: 26px; }
+    }
+    @media (min-width: 721px) and (max-height: 820px) {
+      #onlineGameScreen { padding: 24px 40px 28px; }
+      #onlineGameScreen #onlineQuestionContainer > .online-actions { margin-top: 14px; padding: 12px 40px; }
+    }
+    @media (max-width: 720px) {
+      #onlineGameScreen .online-top { align-items: center; }
+      #onlineGameScreen .online-board { margin-bottom: 4px; }
+    }
   </style>
 </head>
 <body>
