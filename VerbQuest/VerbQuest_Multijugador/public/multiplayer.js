@@ -60,8 +60,8 @@
     });
     stream.onerror=()=>{
       if(!session)return;
-      if(view?.phase==='lobby')$m('lobbyNote').textContent='⚠️ Reconectando con el servidor…';
-      if(view?.phase==='playing')$m('onlineGameEyebrow').textContent='⚠️ Reconectando…';
+      if(view?.phase==='lobby')$m('lobbyNote').textContent='Reconectando con el servidor…';
+      if(view?.phase==='playing')$m('onlineGameEyebrow').textContent='Reconectando…';
     };
     readState().then(render).catch(e=>{
       disconnect();showScreen($m('startScreen'));window.alert(e.message);
@@ -86,19 +86,19 @@
   }
   function renderLobby(data){
     if($m('onlineLobbyScreen').hidden)showScreen($m('onlineLobbyScreen'));
-    $m('lobbyTitle').textContent=data.role==='admin'?'You are the room administrator 👑':'You are in! 🎉';
+    $m('lobbyTitle').textContent=data.role==='admin'?'You are the room administrator':'You are in!';
     $m('lobbyCode').textContent=data.code;
     $m('lobbyStatus').textContent=`${data.joined}/${data.capacity} players`;
     $m('lobbyDetails').textContent=`${data.joined} joined · ${data.capacity} maximum capacity (not required) · ${data.duration} min total · ${data.mode} mode`;
     const host=data.role==='admin';
     $m('startOnlineButton').hidden=!host;
     $m('startOnlineButton').disabled=data.joined<data.required;
-    $m('startOnlineButton').textContent=data.joined<data.required?'Waiting for first player…':`🚀 Start now (${data.joined} ${data.joined===1?'player':'players'})`;
-    $m('lobbyNote').textContent=host?(data.joined>=data.required?'✅ Ready! You can start now without filling the room.':'Share the code. The Start button unlocks as soon as one player joins.'):'Waiting for the administrator to start. The room does not need to be full.';
+    $m('startOnlineButton').textContent=data.joined<data.required?'Waiting for first player…':`Start now (${data.joined} ${data.joined===1?'player':'players'})`;
+    $m('lobbyNote').textContent=host?(data.joined>=data.required?'Ready! You can start now without filling the room.':'Share the code. The Start button unlocks as soon as one player joins.'):'Waiting for the administrator to start. The room does not need to be full.';
     const list=$m('lobbyPlayers');list.replaceChildren();
     data.players.forEach((p,i)=>{
       const item=document.createElement('div');item.className=`player-chip${p.online?'':' offline'}`;
-      item.textContent=`${i+1}. ${p.name} ${p.online?'🟢':'⚪'}`;list.append(item);
+      item.textContent=`${i+1}. ${p.name}${p.online?'':' (offline)'}`;list.append(item);
     });
   }
   function countdown(data){
@@ -116,8 +116,8 @@
     $m('onlineStandby').hidden=!(isHost||before||!view.question);
     $m('onlineQuestionContainer').hidden=isHost||before||!view.question;
     if(before)$m('onlineStandby').textContent=`Get ready! Starting in ${seconds}…`;
-    else if(isHost)$m('onlineStandby').textContent='👑 The students are playing. Watch the live leaderboard below.';
-    else if(!view.question)$m('onlineStandby').textContent='🎯 You finished all 80 verbs. Wait for the clock to end!';
+    else if(isHost)$m('onlineStandby').textContent='The students are playing. Watch the live leaderboard below.';
+    else if(!view.question)$m('onlineStandby').textContent='You finished all 80 verbs. Wait for the clock to end!';
     const blocked=before || view.self.answered || pendingAnswer;
     for(const button of $m('onlineAnswers').children)button.disabled=blocked;
   }
@@ -127,7 +127,7 @@
     if(!filtered.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='Waiting for results...';container.append(empty);return;}
     filtered.forEach((player,i)=>{
       const item=document.createElement('div');item.className=`rank-row${player.id===data.self.id?' my-rank':''}`;
-      const medal=document.createElement('strong');medal.textContent=i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+      const medal=document.createElement('strong');medal.textContent=`#${i+1}`;
       const name=document.createElement('span');name.textContent=`${player.name}${player.id===data.self.id?' (you)':''}`;
       const score=document.createElement('strong');score.textContent=`${player.score} pts`;
       item.append(medal,name,score);container.append(item);
@@ -135,11 +135,11 @@
   }
   function renderGame(data){
     if($m('onlineGameScreen').hidden)showScreen($m('onlineGameScreen'));
-    $m('onlineGameEyebrow').textContent=data.role==='admin'?'👑 Administrator · Live scores':`🌍 Room ${data.code} · Live match`;
-    $m('onlineScore').textContent=`⭐ ${data.self.score} pts`;
-    $m('onlineLevel').textContent=`⚡ L${data.self.level} · ${['Starter','Explorer','Practitioner','Advanced','Expert'][data.self.level-1]}`;
+    $m('onlineGameEyebrow').textContent=data.role==='admin'?'Administrator · Live scores':`Room ${data.code} · Live match`;
+    $m('onlineScore').textContent=`${data.self.score} pts`;
+    $m('onlineLevel').textContent=`L${data.self.level} · ${['Starter','Explorer','Practitioner','Advanced','Expert'][data.self.level-1]}`;
     $m('onlineLevel').dataset.level=String(data.self.level);
-    $m('onlineStreak').textContent=`🔥 ${data.self.streak} streak`;
+    $m('onlineStreak').textContent=`${data.self.streak} streak`;
     ranking('onlineLiveRanks',data,10);
     const q=data.question;
     if(q){
@@ -171,7 +171,7 @@
         }
         $m('onlineFeedback').hidden=false;
         $m('onlineFeedback').classList.toggle('bad',!feedback.correct);
-        $m('onlineFeedbackTitle').textContent=feedback.correct?'✅ Correct answer!':'💪 Keep going!';
+        $m('onlineFeedbackTitle').textContent=feedback.correct?'Correct answer!':'Keep going!';
         $m('onlineFeedbackText').textContent=`${caps(feedback.forms)} · ${feedback.meaning}${feedback.note?' · '+feedback.note:''}`;
         $m('onlineNextButton').hidden=false;
       }else{
