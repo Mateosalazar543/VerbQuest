@@ -152,7 +152,8 @@
       $m('onlineSubtitle').textContent=q.subtitle;
       const signature=`${q.index}:${q.options.join('|')}`;
       if(questionSignature!==signature){
-        questionSignature=signature;pendingAnswer=false;
+        const hadQuestion=questionSignature!=='';questionSignature=signature;pendingAnswer=false;
+        if(hadQuestion&&$m('onlineGameScreen').getBoundingClientRect().top<0)requestAnimationFrame(()=>$m('onlineGameScreen').scrollIntoView({block:'start',behavior:'smooth'}));
         const container=$m('onlineAnswers');container.replaceChildren();
         q.options.forEach((option,i)=>{
           const button=document.createElement('button');button.className='answer';button.type='button';button.style.setProperty('--i',i);
@@ -169,11 +170,12 @@
           button.classList.toggle('correct',i===feedback.correctIndex);
           button.classList.toggle('incorrect',i===feedback.chosenIndex&&!feedback.correct);
         }
-        $m('onlineFeedback').hidden=false;
+        const firstShow=$m('onlineFeedback').hidden;$m('onlineFeedback').hidden=false;
         $m('onlineFeedback').classList.toggle('bad',!feedback.correct);
         $m('onlineFeedbackTitle').textContent=feedback.correct?'Correct answer!':'Keep going!';
         $m('onlineFeedbackText').textContent=`${caps(feedback.forms)} · ${feedback.meaning}${feedback.note?' · '+feedback.note:''}`;
         $m('onlineNextButton').hidden=false;
+        if(firstShow)requestAnimationFrame(()=>$m('onlineFeedback').scrollIntoView({block:'nearest',behavior:'smooth'}));
       }else{
         $m('onlineFeedback').hidden=true;$m('onlineNextButton').hidden=true;
       }
