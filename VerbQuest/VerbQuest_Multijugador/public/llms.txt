@@ -1,0 +1,15 @@
+# VerbQuest
+
+> Free web game to practice the base form, simple past and past participle of 80 English irregular verbs, with adaptive difficulty and live multiplayer rooms. Built by Mateo Salazar (Pontificia Universidad Javeriana, Bogota, Colombia).
+
+## Play
+- [VerbQuest](https://mateosalazar543.github.io/VerbQuest/): solo practice and multiplayer rooms, no account required
+
+## What it does
+- Multiple-choice questions on base form, simple past, past participle or mixed mode
+- Sessions of 10, 20, 40 or all verbs, with an optional timer per question
+- Adaptive difficulty, streaks, points and per-verb mastery tracking saved in the browser
+- Private timed rooms with a join code and a live leaderboard
+
+## Project
+- [Source code](https://github.com/Mateosalazar543/VerbQuest): HTML, CSS and vanilla JavaScript, with a small Node.js server for multiplayer

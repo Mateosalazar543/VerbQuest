@@ -1,0 +1,15 @@
+# Se permite a buscadores y a asistentes de IA. Solo se excluye la API.
+User-agent: *
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+
+Sitemap: https://mateosalazar543.github.io/VerbQuest/sitemap.xml
