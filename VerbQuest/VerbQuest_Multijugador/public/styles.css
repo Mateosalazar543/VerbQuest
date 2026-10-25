@@ -1729,3 +1729,254 @@ html[data-theme="dark"] .hero-art {
   }
 }
 
+
+/* =========================================================
+   AJUSTE VISUAL FINAL
+   - mejorar contenido del celular/tablet del hero
+   - mejorar contraste del verbo en modo oscuro
+   ========================================================= */
+
+/* ---------- HERO PHONE / TABLET ---------- */
+
+.hero-art {
+  isolation: isolate;
+  position: relative;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 290px;
+  height: 410px;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 34px 18px 20px;
+  background: #3fcc6b;
+  border: 10px solid #111111;
+  border-radius: 42px;
+  color: #ffffff;
+  transform: rotate(4deg);
+  overflow: hidden;
+}
+
+.hero-art::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 68px;
+  height: 13px;
+  margin-left: -34px;
+  background: #111111;
+  border-radius: 999px;
+}
+
+.hero-art::after {
+  content: none;
+}
+
+/* globos flotantes */
+.hero::before,
+.hero::after {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  z-index: 2;
+  padding: 12px 18px;
+  min-width: 86px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #111111;
+  font: 800 1.05rem/1 "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -.018em;
+}
+
+.hero::before {
+  content: "went";
+  top: 30px;
+  right: 290px;
+}
+
+.hero::after {
+  content: "gone";
+  right: -6px;
+  bottom: 92px;
+}
+
+/* contenido interno del telefono */
+.phone-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: .74rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.phone-status span:first-child {
+  opacity: .96;
+}
+
+.phone-status span:last-child {
+  letter-spacing: .08em;
+  font-size: .65rem;
+}
+
+.phone-avatars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+
+.phone-avatars span,
+.phone-bottom span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #111111;
+  font-size: .78rem;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.hero .phone-prompt {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1.2;
+  color: rgba(255,255,255,.96);
+}
+
+.phone-word {
+  display: block;
+  margin: 0 0 16px;
+  text-align: center;
+  font: 400 2.9rem/1.05 "Archivo Black", sans-serif;
+  letter-spacing: -.03em;
+  color: #ffffff;
+}
+
+.phone-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 2px;
+}
+
+.phone-options span {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  padding: 0 8px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111111;
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.phone-options span:first-child {
+  outline: 3px solid #111111;
+  outline-offset: -3px;
+}
+
+.phone-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+/* ---------- PREGUNTA EN MODO OSCURO ---------- */
+
+/* El verbo principal debe leerse muy bien en modo oscuro */
+html[data-theme="dark"] .question-word:not(.context-word) {
+  color: #ffe400 !important;
+  background: none !important;
+  -webkit-text-fill-color: #ffe400 !important;
+  text-shadow: 0 2px 0 rgba(0,0,0,.22);
+  letter-spacing: -.03em;
+}
+
+/* subtitulo y area con mejor contraste */
+html[data-theme="dark"] .question-area {
+  background: #18314f;
+  border: 1px solid #314d69;
+}
+
+html[data-theme="dark"] .question-title,
+html[data-theme="dark"] #questionTitle,
+html[data-theme="dark"] .question-subtitle,
+html[data-theme="dark"] #questionSubtitle {
+  color: #f3f8ff !important;
+}
+
+html[data-theme="dark"] .question-type {
+  background: #ffffff;
+  color: #111111;
+}
+
+/* respuestas con mejor lectura */
+html[data-theme="dark"] .answer {
+  background: #10243b;
+  border-color: #45617d;
+  color: #f3f8ff;
+}
+
+html[data-theme="dark"] .answer .letter {
+  background: #294a6c;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .answer:hover:not(:disabled) {
+  background: #18314f;
+  border-color: #80ccff;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 980px) {
+  .hero-art {
+    width: 270px;
+    height: 385px;
+    padding: 32px 16px 18px;
+  }
+
+  .phone-word {
+    font-size: 2.55rem;
+  }
+
+  .phone-options span {
+    min-height: 40px;
+    font-size: .86rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero::before,
+  .hero::after {
+    display: none;
+  }
+
+  .hero-art {
+    display: none;
+  }
+
+  html[data-theme="dark"] .question-word:not(.context-word) {
+    font-size: clamp(2.7rem, 11vw, 4rem);
+    line-height: 1.02;
+  }
+}
+
