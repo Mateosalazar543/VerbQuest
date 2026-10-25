@@ -167,7 +167,8 @@
           <button id="tabJoin" class="btn-quiet" type="button">Join room</button>
         </div>
         <form id="onlineForm" class="online-form">
-          <div><label for="onlineName">Your nickname</label><input id="onlineName" maxlength="22" minlength="2" required placeholder="e.g. Alex" autocomplete="nickname"></div>
+          <div><label for="onlineName">Your nickname</label><input id="onlineName" maxlength="22" minlength="2" required placeholder="e.g. Alex" autocomplete="nickname" aria-describedby="onlineNameHint"></div>
+          <p class="muted online-name-hint" id="onlineNameHint">2-22 caracteres. Sin insultos, groserías, enlaces ni nombres que suplanten al equipo.</p>
           <div id="joinCodeWrap" hidden><label for="joinCode">Room code</label><input id="joinCode" maxlength="6" minlength="6" placeholder="ABC234" autocapitalize="characters"></div>
           <div class="controls" id="adminControls">
             <div><label for="maxPlayers">Maximum players</label><select id="maxPlayers"><option value="10">10 players</option><option value="15">15 players</option><option value="20" selected>20 players</option><option value="30">30 players</option><option value="50">50 players</option></select></div>
@@ -260,6 +261,7 @@
   </div>
 
   <script src="./app.js" defer></script>
+  <script src="./name-policy.js" defer></script>
   <script src="./multiplayer.js" defer></script>
 </body>
 </html>

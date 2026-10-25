@@ -1,6 +1,7 @@
 'use strict';
 // VerbQuest multijugador: toda respuesta, reloj y puntuación se validan en el servidor.
 const crypto = require('node:crypto');
+const { moderateName } = require('./public/name-policy');
 const VERBS = require('./verbs.json');
 const MAX_ROOMS = 100;
 // Minimum number of registered participants needed to start a match.
@@ -183,7 +184,7 @@ class GameService {
   room(code){const room=this.rooms.get(String(code||'').toUpperCase());if(!room) throw new Error('Sala no encontrada o expirada.');return room;}
   auth(code,token){const room=this.room(code);if(room.admin.token===token)return {room,person:room.admin};const person=room.players.find(p=>p.token===token);if(!person)throw new Error('Credenciales de sala incorrectas.');return {room,person};}
   uniqueCode(){let code;do{code=Array.from({length:6},()=>CODES[crypto.randomInt(CODES.length)]).join('');}while(this.rooms.has(code));return code;}
-  validateName(name){const value=String(name||'').trim().replace(/\s+/g,' ');if(value.length<2||value.length>22||/[<>\x00-\x1f]/.test(value))throw new Error('Introduce un nombre de 2 a 22 caracteres.');return value;}
+  validateName(name){return moderateName(name);}
   create({name,capacity=10,duration=3,mode='mixed'}){
     this.cleanup();
     if(this.rooms.size>=MAX_ROOMS)throw new Error('El servidor alcanzó el límite de salas.');
