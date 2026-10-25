@@ -21,8 +21,8 @@ function publish(room,kind='state',message=''){
 }
 service.broadcast=publish;
 function parseBody(req){return new Promise((resolve,reject)=>{let body='';req.on('data',chunk=>{body+=chunk;if(body.length>10000){reject(Error('Solicitud demasiado grande.'));req.destroy();}});req.on('end',()=>{try{resolve(JSON.parse(body||'{}'));}catch{reject(Error('JSON inválido.'));}});req.on('error',reject);});}
-function apiError(res,err){json(res,400,{error:err.message||'Error inesperado.'});}
-const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.json':'application/json; charset=utf-8'};
+function apiError(res,err){json(res,400,{error:err.message||'Error inesperado.',code:err.code||'BAD_REQUEST'});}
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon','.gif':'image/gif','.mp3':'audio/mpeg','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.json':'application/json; charset=utf-8'};
 function sendFile(res,status,file){
   fs.readFile(file,(err,data)=>{
     if(err){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});res.end('Not found');return;}

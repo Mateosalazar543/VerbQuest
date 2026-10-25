@@ -168,6 +168,7 @@
         </div>
         <form id="onlineForm" class="online-form">
           <div><label for="onlineName">Your nickname</label><input id="onlineName" maxlength="22" minlength="2" required placeholder="e.g. Alex" autocomplete="nickname" aria-describedby="onlineNameHint"></div>
+          <p id="vqNameNotice" class="muted">Solo nombres respetuosos. Los nombres ofensivos activan un breve jumpscare con sonido.</p>
           <p class="muted online-name-hint" id="onlineNameHint">2-22 caracteres. Sin insultos, groserías, enlaces ni nombres que suplanten al equipo.</p>
           <div id="joinCodeWrap" hidden><label for="joinCode">Room code</label><input id="joinCode" maxlength="6" minlength="6" placeholder="ABC234" autocapitalize="characters"></div>
           <div class="controls" id="adminControls">
@@ -262,6 +263,7 @@
 
   <script src="./app.js" defer></script>
   <script src="./name-policy.js" defer></script>
+  <script src="./jumpscare.js" defer></script>
   <script src="./multiplayer.js" defer></script>
 </body>
 </html>
