@@ -1980,3 +1980,256 @@ html[data-theme="dark"] .answer:hover:not(:disabled) {
   }
 }
 
+
+/* =================================================
+   VERBQUEST - CLEAN PHONE PREVIEW
+   Maqueta visual independiente del quiz real
+   ================================================= */
+
+/* Eliminar globos flotantes superpuestos */
+
+#startScreen .hero::before,
+#startScreen .hero::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Estructura principal del dispositivo */
+
+#startScreen .hero-art.vq-phone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-self: center;
+  isolation: isolate;
+
+  box-sizing: border-box;
+  width: 300px;
+  height: 460px;
+  max-width: 100%;
+  min-height: 0;
+
+  margin: 0;
+  padding: 39px 18px 18px;
+
+  border: 9px solid #101820;
+  border-radius: 42px;
+
+  background: #3fcc6b;
+  color: #103321;
+
+  overflow: hidden;
+  transform: rotate(1.5deg);
+  animation: none !important;
+}
+
+/* Notch del celular */
+
+#startScreen .hero-art.vq-phone::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+
+  width: 65px;
+  height: 12px;
+  margin: 0;
+
+  border-radius: 20px;
+  transform: translateX(-50%);
+  background: #101820;
+}
+
+#startScreen .hero-art.vq-phone::after {
+  content: none;
+  display: none;
+}
+
+/* Encabezado de la pantalla */
+
+.vq-phone__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+
+  font: 800 13px/1.2 "Plus Jakarta Sans",
+    system-ui, sans-serif;
+}
+
+.vq-phone__logo {
+  color: #0d3220;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+}
+
+.vq-phone__logo span {
+  color: #ffffff;
+}
+
+.vq-phone__count {
+  padding: 6px 9px;
+  border-radius: 6px;
+
+  background: #d8f8e2;
+  color: #10442a;
+
+  font-size: 11px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Barra de progreso */
+
+.vq-phone__progress {
+  height: 5px;
+  margin: 12px 0 16px;
+
+  border-radius: 10px;
+  background: #239d4d;
+  overflow: hidden;
+}
+
+.vq-phone__progress > span {
+  display: block;
+  width: 10%;
+  height: 100%;
+
+  border-radius: inherit;
+  background: #ffffff;
+}
+
+/* Area de la pregunta */
+
+.vq-phone__prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.vq-phone__eyebrow {
+  color: #16512e;
+  font: 800 10px/1.4 "Plus Jakarta Sans", sans-serif;
+  letter-spacing: .13em;
+}
+
+.vq-phone__intro {
+  margin-top: 5px;
+  color: #153e27;
+  font: 600 13px/1.4 "Plus Jakarta Sans", sans-serif;
+}
+
+.vq-phone__word {
+  margin: 4px 0 0;
+  color: #ffffff;
+
+  font: 400 46px/1 "Archivo Black", sans-serif;
+  letter-spacing: -.04em;
+}
+
+.vq-phone__word span {
+  color: #124727;
+}
+
+/* Contenedor de respuestas */
+
+.vq-phone__choices {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* Opciones uniformes y legibles */
+
+.vq-phone__choice {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 12px;
+
+  border: 2px solid transparent;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #17291c;
+
+  font: 700 14px/1.25 "Plus Jakarta Sans",
+    system-ui, sans-serif;
+}
+
+/* Letras A, B, C y D */
+
+.vq-phone__choice b {
+  flex: 0 0 24px;
+  display: grid;
+  place-items: center;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 5px;
+  background: #e5f8eb;
+  color: #184b30;
+
+  font-size: 11px;
+}
+
+.vq-phone__choice > span {
+  flex: 1;
+}
+
+/* Respuesta correcta */
+
+.vq-phone__choice--correct {
+  border-color: #135b32;
+  background: #f4fff7;
+}
+
+.vq-phone__choice i {
+  color: #135b32;
+  font-size: 17px;
+  font-style: normal;
+}
+
+/* Mensaje inferior discreto */
+
+.vq-phone__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  margin-top: auto;
+  padding-top: 8px;
+
+  color: #174b2f;
+  font: 700 10px/1.4 "Plus Jakarta Sans",
+    sans-serif;
+  letter-spacing: .015em;
+}
+
+.vq-phone__footer-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #135b32;
+}
+
+/* Mantener el responsive existente */
+
+@media (max-width: 720px) {
+  #startScreen .hero-art.vq-phone {
+    display: none;
+  }
+}
+
