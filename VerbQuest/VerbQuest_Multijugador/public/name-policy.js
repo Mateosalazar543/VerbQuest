@@ -1,69 +1,52 @@
-/* Reglas compartidas: cliente y servidor */
-(function (root, makePolicy) {
+/* Politica de nombres compartida por el servidor y el navegador. */
+(function (root, factory) {
   'use strict';
-
-  const policy = makePolicy();
-
+  const api = factory();
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = policy;
+    module.exports = api;
   }
-
-  if (root) root.VerbQuestNamePolicy = policy;
-
-})(typeof globalThis === 'undefined' ? null : globalThis, function () {
+  if (root) root.VerbQuestNamePolicy = api;
+})(typeof globalThis !== 'undefined' ? globalThis : null, function () {
   'use strict';
 
-  const MAX_LENGTH = 22;
+  const BLOCKED_MESSAGE =
+    'Nombre no permitido. Elige uno respetuoso.';
 
-  const BAD_NAME =
-    'Ese nombre no está permitido. Elige uno respetuoso y diferente.';
+  const INVALID_MESSAGE =
+    'Escribe de 2 a 22 caracteres usando letras, números, espacios o guiones.';
 
-  const INVALID_NAME =
-    'Usa de 2 a 22 caracteres: letras, números, espacios, puntos, guiones o guion bajo.';
-
-  // Coincidencias completas para evitar falsos positivos.
-  const blockedWords = new Set([
+  // Palabras completas para reducir falsos positivos.
+  const bannedWords = new Set([
     'puta', 'puto', 'putas', 'putos', 'putita', 'putito', 'putazo',
-    'mierda', 'mierdas', 'hpta', 'hpt',
-    'hijueputa', 'hijoputa', 'hijaputa',
-    'malparido', 'malparida', 'gonorrea', 'carechimba', 'chimba',
-    'marica', 'marico', 'maricon', 'maricona',
-    'pendejo', 'pendeja', 'idiota', 'imbecil',
-    'estupido', 'estupida', 'cabron', 'cabrona',
-    'verga', 'mamaguevo', 'culero', 'culera',
+    'mierda', 'mierdas', 'hpta', 'hpt', 'hp', 'hdp',
+    'hijueputa', 'hijoputa', 'hijaputa', 'malparido', 'malparida',
+    'gonorrea', 'carechimba', 'marica', 'marico', 'maricon',
+    'pendejo', 'pendeja', 'idiota', 'imbecil', 'estupido', 'estupida',
+    'cabron', 'cabrona', 'verga', 'mamaguevo', 'culero', 'culera',
     'zorra', 'perra',
-
     'fuck', 'fucker', 'fucking', 'motherfucker',
-    'shit', 'bullshit', 'bitch', 'bitches',
-    'asshole', 'cunt', 'pussy', 'slut', 'whore',
-    'nigger', 'nigga', 'faggot', 'fag',
+    'shit', 'bullshit', 'bitch', 'bitches', 'asshole', 'cunt',
+    'pussy', 'slut', 'whore', 'nigger', 'nigga', 'faggot', 'fag',
     'retard', 'retarded',
-
     'nazi', 'hitler', 'kkk',
-    'porn', 'porno', 'pornhub', 'xxx',
-    'nudes', 'sex', 'sexo', 'sexy',
-
+    'porno', 'porn', 'pornhub', 'xxx', 'nudes', 'sexo', 'sex',
     'admin', 'administrator', 'administrador',
-    'moderator', 'moderador', 'staff',
-    'support', 'soporte', 'system', 'sistema',
+    'moderator', 'moderador', 'staff', 'support',
+    'soporte', 'system', 'sistema',
     'oficial', 'official', 'verbquest'
   ]);
 
-  // Fragmentos distintivos dentro de nombres compuestos.
-  const blockedFragments = [
-    'hijueput', 'hijoput', 'malparid',
-    'carechimb', 'gonorrea', 'pendej',
-    'motherfuck', 'fuck', 'bullshit',
-    'asshole', 'bitch', 'nigger', 'nigga',
-    'faggot', 'retard', 'pornograf',
-    'pornhub', 'onlyfans', 'verbquest'
+  // Raices distintivas para detectar palabras concatenadas.
+  const strongRoots = [
+    'hijueput', 'hijoput', 'hijaput', 'malparid',
+    'carechimb', 'gonorrea', 'mamaguev', 'pendej',
+    'mierda', 'motherfuck', 'bullshit', 'asshole',
+    'faggot', 'nigger', 'nigga', 'fuck',
+    'bitch', 'pornhub', 'verbquest'
   ];
 
-  const reserved =
-    /^(?:admin|administrator|administrador|moderator|moderador|staff|support|soporte|system|sistema|oficial|official|nazi|hitler|kkk)\d*$/;
-
-  const link =
-    /(?:https?:\/\/|www\.|\.(?:com|net|org|io|gg|co)\b|@)/i;
+  const reservedPrefix =
+    /^(?:admin|moderador|moderator|staff|support|soporte|system|sistema|oficial|official)[a-z0-9]*$/;
 
   const leet = {
     '0': 'o',
@@ -75,92 +58,118 @@
     '8': 'b'
   };
 
-  function fold(value) {
-    return value.normalize('NFKD')
+  function fold(text) {
+    return text.normalize('NFKD')
       .replace(/\p{M}/gu, '')
       .toLowerCase()
       .replace(/[0134578]/g, digit => leet[digit]);
   }
 
-  function condensed(value) {
-    return value.replace(/(.)\1{2,}/g, '$1');
+  function simplify(text) {
+    return text.replace(/(.)\1{2,}/g, '$1');
   }
 
-  function isBlocked(value) {
-    const chunks = fold(value)
-      .split(/[^a-z0-9]+/)
-      .filter(Boolean);
-
-    const combined = chunks.join('');
-
-    const raw = value.normalize('NFKD')
-      .replace(/\p{M}/gu, '')
-      .toLowerCase();
-
-    const rawChunks = raw
-      .split(/[^a-z0-9]+/)
-      .filter(Boolean);
-
-    if (
-      rawChunks.some(part => reserved.test(part)) ||
-      reserved.test(rawChunks.join(''))
-    ) {
+  function blocked(name) {
+    // Enlaces, correos y etiquetas HTML.
+    if (/(?:https?:\/\/|www\.|\.(?:com|net|org|io|gg|co)\b|@|[<>])/i.test(name)) {
       return true;
     }
 
-    const alternatives = [
-      ...chunks,
-      combined,
-      condensed(combined)
+    const originalParts = name.toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean);
+
+    const parts = fold(name)
+      .split(/[^a-z0-9]+/)
+      .filter(Boolean);
+
+    const joined = parts.join('');
+
+    const variants = [
+      ...parts,
+      joined,
+      simplify(joined)
     ];
 
-    return alternatives.some(part =>
-      blockedWords.has(part) ||
-      reserved.test(part) ||
-      blockedFragments.some(fragment => part.includes(fragment)) ||
-      blockedWords.has(part.replace(/^\d+|\d+$/g, ''))
+    // Detectar insultos con sufijos numericos.
+    for (const part of originalParts) {
+      if (/\d+$/.test(part)) {
+        variants.push(fold(part.replace(/\d+$/, '')));
+      }
+    }
+
+    // Abreviaturas: P3rro.hp, h.p, HP2026, etc.
+    if (originalParts.some(part =>
+      /^(?:hp|hpt|hpta|hdp)\d*$/.test(part)
+    )) return true;
+
+    if (/(?:^|[^a-z])(?:hp|hpt|hpta|hdp)(?:$|[^a-z])/.test(fold(name))) {
+      return true;
+    }
+
+    if (/(?:hp|hpt|hpta|hdp)$/.test(joined)) {
+      return true;
+    }
+
+    return variants.some(value =>
+      bannedWords.has(value) ||
+      reservedPrefix.test(value) ||
+      strongRoots.some(root => value.includes(root))
     );
   }
 
-  function validateName(value) {
-    if (typeof value !== 'string') {
-      return { ok: false, error: INVALID_NAME };
+  function validateName(input) {
+    if (typeof input !== 'string') {
+      return {
+        ok: false,
+        code: 'NAME_INVALID',
+        error: INVALID_MESSAGE
+      };
     }
 
-    const name = value.normalize('NFKC')
+    const name = input.normalize('NFKC')
       .trim()
       .replace(/\s+/gu, ' ');
 
-    const length = Array.from(name).length;
+    const size = Array.from(name).length;
 
-    if (length < 2 || length > MAX_LENGTH) {
-      return { ok: false, error: INVALID_NAME };
+    if (size < 2 || size > 22) {
+      return {
+        ok: false,
+        code: 'NAME_INVALID',
+        error: INVALID_MESSAGE
+      };
     }
 
-    // Permitir letras latinas, tildes, números y
-    // puntuación habitual en nombres.
-    // Rechazar caracteres invisibles y otros alfabetos
-    // que podrían usarse para evadir el filtro.
+    if (blocked(name)) {
+      return {
+        ok: false,
+        code: 'NAME_BLOCKED',
+        error: BLOCKED_MESSAGE
+      };
+    }
+
     if (
       !/^[\p{Script=Latin}\p{M}\p{Nd} ._'’-]+$/u.test(name) ||
-      !/\p{Script=Latin}/u.test(name) ||
-      link.test(name)
+      !/\p{Script=Latin}/u.test(name)
     ) {
-      return { ok: false, error: INVALID_NAME };
-    }
-
-    if (isBlocked(name)) {
-      return { ok: false, error: BAD_NAME };
+      return {
+        ok: false,
+        code: 'NAME_INVALID',
+        error: INVALID_MESSAGE
+      };
     }
 
     return { ok: true, name };
   }
 
-  function moderateName(value) {
-    const result = validateName(value);
+  function moderateName(input) {
+    const result = validateName(input);
 
     if (!result.ok) {
-      throw new Error(result.error);
+      const error = new Error(result.error);
+      error.code = result.code;
+      throw error;
     }
 
     return result.name;

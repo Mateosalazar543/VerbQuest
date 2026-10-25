@@ -2233,3 +2233,78 @@ html[data-theme="dark"] .answer:hover:not(:disabled) {
   }
 }
 
+
+/* ================================================
+   VERBQUEST - FREDDY JUMPSCARE
+   Responsive + accesibilidad
+   ================================================ */
+
+.vq-jumpscare[hidden] {
+  display: none !important;
+}
+
+.vq-jumpscare {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+
+  display: grid;
+  place-items: center;
+
+  box-sizing: border-box;
+
+  padding: 64px 14px 20px;
+  padding-top: max(64px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+
+  background: rgba(0, 0, 0, .97);
+  color: #ffffff;
+}
+
+.vq-jumpscare__content {
+  width: min(94vw, 660px);
+  text-align: center;
+}
+
+.vq-jumpscare__content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 200 / 113;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.vq-jumpscare__content p {
+  margin: 15px auto 0;
+
+  font: 700 clamp(15px, 3vw, 19px)/1.4
+    'Plus Jakarta Sans', sans-serif;
+
+  color: #ffffff;
+}
+
+.vq-jumpscare__close {
+  position: absolute;
+
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+
+  min-width: 92px;
+  min-height: 44px;
+
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+
+  background: #151515;
+  color: #ffffff;
+
+  font: 700 14px 'Plus Jakarta Sans', sans-serif;
+
+  cursor: pointer;
+}
+
+.vq-jumpscare__close:focus-visible {
+  outline: 3px solid #ffe400;
+}
+
