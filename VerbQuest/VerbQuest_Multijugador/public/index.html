@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./theme-toggle.js"></script>
 </head>
 <body>
   <noscript>VerbQuest needs JavaScript to run. Please enable it in your browser.</noscript>
@@ -49,10 +50,15 @@
             <p class="eyebrow">English challenge</p>
             <h1 id="welcomeTitle">Master <span class="hl">irregular</span> verbs</h1>
             <p>Practice the <b>base form</b>, <b>simple past</b> and <b>past participle</b> in a fast, fun multiple-choice challenge.</p>
+            <aside class="hero-notice"><small>THE DAILY CHALLENGE ↗</small><strong>One verb at a time. Better every round.</strong></aside>
           </div>
           <div class="hero-art" aria-hidden="true">
-            <div class="flash-card back"><span>Past participle</span><strong>Gone</strong></div>
-            <div class="flash-card front"><span>Base form</span><strong>Go →</strong></div>
+            <div class="phone-status"><span>VerbQuest</span><span>● ● ●</span></div>
+            <div class="phone-avatars"><span>VQ</span><span>★</span></div>
+            <p class="phone-prompt">CHOOSE THE SIMPLE PAST</p>
+            <strong class="phone-word">GO</strong>
+            <div class="phone-options"><span>went</span><span>gone</span><span>goes</span><span>going</span></div>
+            <div class="phone-bottom"><span>♫</span><span>✓</span><span>★</span></div>
           </div>
         </div>
         <div class="settings">
@@ -244,6 +250,5 @@
 
   <script src="./app.js" defer></script>
   <script src="./multiplayer.js" defer></script>
-  <script src="/theme-toggle.js" defer></script>
 </body>
 </html>

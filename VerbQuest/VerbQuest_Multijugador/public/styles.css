@@ -1490,3 +1490,242 @@ html[data-theme="dark"] .flash-card span {
   }
 }
 
+
+/* =================================================
+   VERBQUEST HONK - INTERFAZ Y TEMAS
+   ================================================= */
+
+/* Tema claro */
+:root {
+  --honk-canvas: #008fff;
+  --honk-yellow: #ffe400;
+  --honk-white: #ffffff;
+  --honk-green: #3fcc6b;
+  --honk-panel: #ffffff;
+  --honk-text: #111111;
+}
+
+/* Tema oscuro */
+html[data-theme="dark"] {
+  --honk-canvas: #081326;
+  --honk-panel: #111e33;
+  --honk-text: #f5f8ff;
+}
+
+/* Barra de navegacion */
+.theme-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.theme-toggle {
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 2px solid white;
+  border-radius: 6px;
+  background: transparent;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: white;
+  color: #111111;
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid #ffe400;
+  outline-offset: 3px;
+}
+
+/* Tarjeta informativa */
+.hero-notice {
+  margin-top: 24px;
+  max-width: 470px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #111111;
+}
+
+.hero-notice small {
+  display: block;
+  color: #006ac2;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.hero-notice strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+/* Telefono ilustrativo */
+.hero-art {
+  isolation: isolate;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  width: min(100%, 270px);
+  height: 390px;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 32px 17px 18px;
+  border: 10px solid #111111;
+  border-radius: 40px;
+  background: #3fcc6b;
+  color: white;
+  transform: rotate(4deg);
+  overflow: hidden;
+  animation: none;
+}
+
+.hero-art::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 66px;
+  height: 13px;
+  margin-left: -33px;
+  background: #111111;
+  border-radius: 20px;
+}
+
+.hero-art::after {
+  content: none;
+}
+
+.phone-status {
+  display: flex;
+  justify-content: space-between;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.phone-avatars {
+  display: flex;
+  justify-content: space-between;
+  margin: 22px 0 13px;
+}
+
+.phone-avatars span,
+.phone-bottom span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: white;
+  color: #111111;
+  border-radius: 50%;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.hero .phone-prompt {
+  margin: 2px 0 3px;
+  text-align: center;
+  font-size: .63rem;
+  font-weight: 800;
+}
+
+.phone-word {
+  display: block;
+  margin-bottom: 14px;
+  text-align: center;
+  font: 400 2.5rem/1.2 'Archivo Black', sans-serif;
+}
+
+.phone-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+
+.phone-options span {
+  display: grid;
+  place-items: center;
+  min-height: 38px;
+  border-radius: 6px;
+  background: white;
+  color: #111111;
+  font-size: .81rem;
+  font-weight: 800;
+}
+
+.phone-options span:first-child {
+  outline: 3px solid #111111;
+}
+
+.phone-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: auto;
+}
+
+/* Correcciones de contraste oscuro */
+html[data-theme="dark"] .hero-notice {
+  background: white;
+  color: #111111;
+}
+
+html[data-theme="dark"] .hero-art {
+  background: #3fcc6b;
+  color: white;
+}
+
+/* Dispositivos moviles */
+@media (max-width: 720px) {
+  .theme-actions {
+    gap: 8px;
+  }
+
+  .theme-actions .top-tag {
+    display: none;
+  }
+
+  .theme-toggle {
+    min-height: 42px;
+    padding: 8px 11px;
+    font-size: .78rem;
+  }
+
+  .hero-notice {
+    margin-top: 20px;
+  }
+
+  .hero-art {
+    display: none;
+  }
+
+  html[data-theme="dark"] #gameScreen .question-area,
+  html[data-theme="dark"] #onlineGameScreen .question-area {
+    background: #1b304b;
+    color: #f5f8ff;
+  }
+
+  html[data-theme="dark"] #gameScreen .game-bottom,
+  html[data-theme="dark"] #onlineGameScreen
+  #onlineQuestionContainer > .online-actions {
+    background: #111e33;
+    border-color: #314761;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-art,
+  .theme-toggle {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
