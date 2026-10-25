@@ -771,3 +771,722 @@
       #onlineGameScreen .online-top { align-items: center; }
       #onlineGameScreen .online-board { margin-bottom: 4px; }
     }
+
+/* ==== Tema Honk: lienzo azul electrico, texto blanco, acento amarillo ==== */
+:root {
+  --bg: #008fff; --ink: #111111; --muted: #363636; --line: #111111; --paper: #ffffff;
+  --accent: #008fff; --accent-light: #e6f4ff; --mint: #3fcc6b; --mint-light: #3fcc6b;
+  --coral: #111111; --coral-light: #111111; --violet: #008fff; --violet-d: #0071d6; --blue: #008fff;
+  --shadow: none; --shadow-sm: none; --sh-1: none;
+  --font-display: 'Archivo Black', 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+html body { background: #008fff !important; color: #111; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; letter-spacing: -.018em; }
+*, *::before, *::after { box-shadow: none !important; text-shadow: none !important; }
+:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
+.bg { display: block; }
+.orb { display: block; filter: none; opacity: 1; animation: none; }
+.orb.o1, .orb.o2, .orb.o3 { background: #00a0ff; }
+.app { width: min(100% - 48px, 1100px); }
+
+/* Barra superior sobre el azul */
+.topbar { border-bottom: 0; margin-bottom: 8px; padding-bottom: 8px; }
+.brand { color: #fff; font-weight: 700; letter-spacing: -.03em; }
+.brand strong { color: #ffe400; }
+.brand-mark { background: #fff; color: #111; border: 0; border-radius: 6px; font-family: var(--font-display); font-weight: 400; font-size: .9rem; }
+.top-tag { background: transparent; border: 0; color: #fff; font-weight: 500; font-size: .9rem; padding: 6px 0; }
+
+/* Paneles blancos de 16px; el inicio vive directo sobre el azul */
+.panel { background: #fff; border: 0; border-radius: 16px; color: #111; }
+.panel.screen:not(#startScreen) { max-width: 880px; margin-inline: auto; }
+#startScreen.panel { background: transparent; border-radius: 0; }
+.eyebrow { color: #363636; text-transform: none; letter-spacing: -.018em; font-weight: 600; font-size: .875rem; }
+
+/* Hero: titular, subtitulo, telefono verde y burbujas */
+.hero { position: relative; background: transparent; color: #fff; border: 0; border-radius: 0; padding: 32px 0 56px;
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; align-items: center; }
+.hero .eyebrow { color: #fff; font-size: .95rem; margin-bottom: 12px; }
+.hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.25rem, 5.2vw, 3.25rem); line-height: 1.23; letter-spacing: -.012em; color: #fff; margin: 0 0 20px; }
+.hero h1 .hl { color: #ffe400; }
+.hero p { color: #fff; font-size: 1.1875rem; line-height: 1.55; letter-spacing: -.006em; max-width: 460px; }
+.hero p b { background: none; color: #fff; font-weight: 600; padding: 0; }
+.hero-art { position: relative; justify-self: end; display: block; width: min(100%, 250px); height: 330px; min-height: 0; max-width: none; margin: 0;
+  background: #3fcc6b; border: 10px solid #111; border-radius: 38px; }
+.hero-art::before { content: ""; position: absolute; top: 8px; left: 50%; width: 64px; height: 14px; margin-left: -32px; background: #111; border-radius: 8px; }
+.hero-art::after { content: ""; position: absolute; left: 50%; bottom: 16px; width: 150px; height: 30px; margin-left: -75px;
+  background: radial-gradient(circle at 15px 15px, #fff 13px, transparent 14px) 0 0 / 60px 30px repeat-x; }
+.flash-card, .flash-card.back, .flash-card.front { position: absolute; left: 16px; right: 16px; min-width: 0; padding: 14px 16px; background: #fff; color: #111; border: 0; border-radius: 16px; transform: none; }
+.flash-card.back { top: 44px; } .flash-card.front { top: 140px; }
+.hero-art:hover .flash-card { transform: none; }
+.flash-card span, .flash-card.back span, .flash-card.front span { font-size: .8125rem; font-weight: 500; text-transform: none; letter-spacing: -.026em; color: #363636; }
+.flash-card strong { font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; letter-spacing: -.012em; color: #111; }
+.hero::before, .hero::after { display: block; position: absolute; z-index: 1; padding: 12px 18px; background: #fff; color: #111; border-radius: 16px; font: 600 1.125rem/1 'Plus Jakarta Sans', sans-serif; letter-spacing: -.018em; }
+.hero::before { content: "went"; top: 40px; right: 272px; }
+.hero::after { content: "gone"; right: -18px; bottom: 96px; }
+
+/* Formulario de inicio */
+.settings { background: #fff; border-radius: 16px; padding: 32px; color: #111; }
+.settings h2 { font-weight: 700; letter-spacing: -.024em; }
+.settings > p, .hint { color: #363636; }
+.pill { background: #111; color: #fff; border-radius: 6px; font-weight: 600; }
+.control label, .online-form label { text-transform: none; letter-spacing: -.018em; font-size: .9375rem; font-weight: 600; }
+.control select, .online-form input, .online-form select { border: 2px solid #111; border-radius: 6px; background: #fff; color: #111; font-weight: 500; }
+.control select:hover { border-color: #008fff; transform: none; }
+.control select:focus, .online-form input:focus, .online-form select:focus { border-color: #008fff; outline: 2px solid #008fff; outline-offset: 1px; }
+.mastery-mini, .multiplayer-start { background: #e6f4ff; border: 0; border-radius: 16px; }
+.mini-progress { height: 8px; border: 0; border-radius: 4px; background: #cfe8ff; }
+.mini-progress > div { background: #008fff; }
+.start-bottom { border-top: 1px solid #cfe8ff; }
+
+/* Botones de 6px: carbon, blanco y fantasma */
+.btn { background: #111; color: #fff; border: 2px solid #111; border-radius: 6px; font-weight: 600; letter-spacing: -.018em;
+  transition: background .15s, color .15s, border-color .15s, transform .15s; }
+.btn:hover { background: #0071d6; border-color: #0071d6; transform: none; }
+.btn:active { transform: scale(.98); }
+.btn-secondary { background: #fff; color: #111; border: 2px solid #111; }
+.btn-secondary:hover { background: #e6f4ff; border-color: #111; }
+.btn-quiet { background: transparent; color: #111; border: 2px solid #111; border-radius: 6px; font-weight: 600; }
+.btn-quiet:hover { background: #111; color: #fff; transform: none; }
+
+/* Pantalla de quiz */
+.game-top h2 { font-weight: 700; letter-spacing: -.024em; color: #111; }
+.stats { background: transparent; border: 0; padding: 0; gap: 6px; }
+.stat, .stat.difficulty-stat, .stat.difficulty-stat[data-level] { background: #e6f4ff; color: #111; border: 0; border-radius: 6px; font-weight: 600; }
+.stat.streak { background: #111; color: #ffe400; }
+.stat.difficulty-stat[data-level="2"] { background: #bfe3ff; color: #111; }
+.stat.difficulty-stat[data-level="3"] { background: #80c7ff; color: #111; }
+.stat.difficulty-stat[data-level="4"] { background: #008fff; color: #111; }
+.stat.difficulty-stat[data-level="5"] { background: #111; color: #fff; }
+.difficulty-feedback, .difficulty-feedback.down, .difficulty-summary { color: #111 !important; }
+.progress-meta { text-transform: none; font-weight: 600; font-size: .875rem; }
+.progress-track, .timer-track { height: 8px; border: 0; border-radius: 4px; background: #cfe8ff; }
+.progress-fill, .timer-fill { background: #008fff; }
+.timer-label { color: #111; }
+.timer-row.urgent .timer-fill { background: #111; } .timer-row.urgent .timer-label { color: #111; }
+.question-area { background: #e6f4ff; border: 0; border-radius: 16px; }
+.question-type { background: #111; color: #fff; border: 0; border-radius: 6px; text-transform: none; letter-spacing: -.026em; font-size: .8125rem; font-weight: 600; }
+.question-area h3 { color: #111; font-weight: 600; }
+.question-subtitle { color: #363636; }
+.question-word { font-family: var(--font-display); font-weight: 400; letter-spacing: -.012em; color: #111; }
+.question-word:not(.context-word) { display: inline-block; padding: 0 .14em; background: linear-gradient(transparent 58%, #ffe400 58%, #ffe400 88%, transparent 88%); }
+.question-word.context-word { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; letter-spacing: -.018em; background: none; }
+
+/* Respuestas: carbon, azul al pasar, verde acierto, carbon invertido en error */
+.answer { background: #fff; color: #111; border: 2px solid #111; border-radius: 6px; font-weight: 600; letter-spacing: -.018em;
+  transition: background .15s, border-color .15s, color .15s, transform .15s; }
+.answer:hover:not(:disabled) { background: #e6f4ff; border-color: #008fff; transform: none; }
+.answer:active:not(:disabled) { transform: scale(.99); }
+.letter { background: #111; color: #fff; border: 0; border-radius: 6px; font-weight: 700; }
+.answer:hover:not(:disabled) .letter { background: #0071d6; color: #fff; border: 0; }
+.answer.correct { background: #3fcc6b; border-color: #111; color: #111; }
+.answer.correct .letter { background: #111; color: #fff; border: 0; }
+.answer.incorrect { background: #111; border-color: #111; color: #fff; }
+.answer.incorrect .letter { background: #fff; color: #111; border: 0; }
+.answer:disabled:not(.correct):not(.incorrect) { opacity: .45; }
+.feedback { background: #3fcc6b; color: #111; border: 0; border-radius: 16px; }
+.feedback.bad { background: #111; color: #fff; }
+.feedback h3, .feedback p, .feedback .small-note { color: inherit; }
+.keyboard-note { color: #363636; }
+.keyboard-note b { background: #e6f4ff; border: 0; border-radius: 4px; color: #111; }
+.game-bottom { border-top: 1px solid #cfe8ff; background: #fff; }
+
+/* Resultados */
+.results h2 { font-family: var(--font-display); font-weight: 400; letter-spacing: -.012em; font-size: clamp(2.25rem, 6vw, 3.25rem); line-height: 1.23; }
+.score-ring { background: conic-gradient(#008fff var(--percentage), #cfe8ff 0); border: 0; }
+.score-ring::before { border: 0; }
+.result-stat:nth-child(n), .mistakes-section, .mastery-overview { background: #e6f4ff; color: #111; border: 0; border-radius: 16px; }
+.mistake-item, .weak-item { background: #fff; border: 0; border-radius: 6px; }
+.mistake-tag, .summary-top .pill { background: #111; color: #fff; border: 0; border-radius: 6px; }
+.no-mistakes, .storage-note { color: #111 !important; }
+.expand-button { color: #111; text-decoration: underline; }
+
+/* Multijugador */
+.room-code { background: #111; color: #ffe400; border: 0; border-radius: 6px; font-family: var(--font-display); font-weight: 400; }
+.lobby-status, .online-board { background: #e6f4ff; border: 0; border-radius: 16px; }
+.player-chip { background: #fff; color: #111; border: 2px solid #111; border-radius: 6px; font-weight: 600; }
+.player-chip.offline { opacity: .5; }
+.online-notice, .online-standby { color: #111; font-weight: 600; }
+.online-error { background: #111; color: #fff; border: 0; border-radius: 6px; }
+.online-clock { color: #111; font-weight: 700; }
+.online-clock.urgent { background: #111; color: #ffe400; border-radius: 6px; padding: 2px 10px; }
+.rank-row { background: #fff; color: #111; border: 0; border-radius: 6px; }
+.rank-row.my-rank { background: #111; color: #fff; }
+.rank-row strong { color: #111; } .rank-row.my-rank strong { color: #ffe400; }
+.winner-banner { background: #111; color: #fff; border: 0; border-radius: 16px; }
+.winner-banner p { color: #fff; } .winner-banner #winnerName { color: #ffe400; }
+
+/* Pie sobre el azul */
+footer, .footer-credits { color: #fff; font-weight: 500; }
+.footer-credits strong { color: #ffe400; text-decoration: none; }
+footer a { color: #fff; }
+
+@media (max-width: 1000px) { .hero::before, .hero::after { display: none; } }
+@media (max-width: 720px) {
+  .app { width: min(100% - 24px, 540px); }
+  .hero { grid-template-columns: 1fr; padding: 20px 0 28px; }
+  .hero-art, .hero::before, .hero::after { display: none; }
+  .settings { padding: 24px 20px 28px; }
+  #gameScreen, #onlineGameScreen { border-radius: 16px; }
+  #gameScreen .stat, #onlineGameScreen .stat { border: 0; border-radius: 6px; }
+  #gameScreen .question-area, #onlineGameScreen .question-area { background: #e6f4ff; border: 0; border-radius: 16px; }
+  #gameScreen .answer, #onlineGameScreen .answer, #gameScreen .answer .letter, #onlineGameScreen .answer .letter { border-radius: 6px; }
+  #gameScreen .game-bottom .btn { border-radius: 6px; }
+  #gameScreen .game-bottom, #onlineGameScreen #onlineQuestionContainer > .online-actions { background: #fff; border-top: 1px solid #cfe8ff; }
+  #gameScreen .game-bottom { border-radius: 0 0 16px 16px; }
+  #onlineGameScreen .online-clock { background: #e6f4ff; border: 0; border-radius: 6px; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover { background: #111; border-color: #111; }
+  .btn-secondary:hover { background: #fff; }
+  .btn-quiet:hover { background: transparent; color: #111; }
+  .answer:hover:not(:disabled) { background: #fff; border-color: #111; }
+  .answer:hover:not(:disabled) .letter { background: #111; color: #fff; }
+  .answer:active:not(:disabled) { background: #e6f4ff; border-color: #008fff; transform: none; }
+}
+
+/* Correccion de tarjetas blancas y animaciones de VerbQuest */
+
+.hero-art {
+  overflow: hidden;
+  isolation: isolate;
+  animation: phoneFloat 4s ease-in-out infinite;
+}
+
+.flash-card,
+.flash-card.back,
+.flash-card.front {
+  z-index: 2;
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+  animation: cardFloat 3s ease-in-out infinite;
+  transition: transform .3s ease, background .3s ease;
+}
+
+.flash-card.back {
+  animation-delay: -.8s;
+}
+
+.hero::before,
+.hero::after {
+  max-width: 180px;
+  box-sizing: border-box;
+  animation: bubbleFloat 4s ease-in-out infinite;
+}
+
+.hero::after {
+  animation-delay: -2s;
+}
+
+.btn,
+.answer,
+.panel,
+.settings {
+  transition: transform .25s ease, background-color .25s ease,
+              border-color .25s ease;
+}
+
+.btn:hover,
+.answer:hover:not(:disabled) {
+  transform: translateY(-3px);
+}
+
+.settings {
+  animation: fadeUp .7s ease both;
+}
+
+.question-area {
+  animation: fadeUp .4s ease both;
+}
+
+.answer {
+  animation: fadeUp .4s ease both;
+}
+
+.answer:nth-child(2) {
+  animation-delay: .05s;
+}
+
+.answer:nth-child(3) {
+  animation-delay: .1s;
+}
+
+.answer:nth-child(4) {
+  animation-delay: .15s;
+}
+
+.answer.correct {
+  animation: correctPop .35s ease;
+}
+
+.answer.incorrect {
+  animation: incorrectShake .35s ease;
+}
+
+.progress-fill,
+.timer-fill,
+.mini-progress > div {
+  transition: width .4s ease;
+}
+
+@keyframes phoneFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes cardFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -4px; }
+}
+
+@keyframes bubbleFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes correctPop {
+  50% { transform: scale(1.025); }
+}
+
+@keyframes incorrectShake {
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* ============================================================
+   VERBQUEST_THEME_PATCH_V1
+   Tarjetas flotantes + selector de tema
+   ============================================================ */
+
+/* 1. Corregir las tarjetas went y gone */
+.hero::before,
+.hero::after {
+  all: unset;
+  box-sizing: border-box;
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: 110px;
+  padding: 12px 18px;
+  background: #ffffff;
+  color: #111111;
+  border: 0;
+  border-radius: 12px;
+  font: 700 1.05rem/1.2 'Plus Jakarta Sans', sans-serif;
+  white-space: nowrap;
+  transform: none;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero::before {
+  content: "went";
+  top: 45px;
+  right: 270px;
+}
+
+.hero::after {
+  content: "gone";
+  top: 235px;
+  right: 275px;
+}
+
+/* Evitar superposiciones en pantallas pequeñas */
+@media (max-width: 1000px) {
+  .hero::before,
+  .hero::after {
+    display: none !important;
+  }
+}
+
+/* 2. Selector de tema en barra superior */
+.theme-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background: rgba(255,255,255,.14);
+  color: #ffffff;
+  border: 1.5px solid rgba(255,255,255,.8);
+  border-radius: 9px;
+  font: 700 .85rem/1.2 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, transform .2s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,.25);
+}
+
+.theme-toggle:active {
+  transform: scale(.96);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid #ffe400;
+  outline-offset: 3px;
+}
+
+/* 3. Variables del modo oscuro */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #081326;
+  --ink: #f5f8ff;
+  --muted: #bfcee3;
+  --line: #526581;
+  --paper: #111e33;
+  --accent: #38a5ff;
+  --accent-light: #1b304b;
+  --mint-light: #21553d;
+}
+
+html[data-theme="dark"] body {
+  background: #081326 !important;
+  color: #f5f8ff;
+}
+
+html[data-theme="dark"] .orb {
+  background: #102747;
+}
+
+html[data-theme="dark"] .theme-toggle {
+  background: #182b47;
+  border-color: #91b7df;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .theme-toggle:hover {
+  background: #29476c;
+}
+
+/* 4. Paneles y contenedores */
+html[data-theme="dark"] :is(
+  .settings,
+  .panel:not(#startScreen),
+  .game-bottom
+) {
+  background: #111e33;
+  color: #f5f8ff;
+}
+
+html[data-theme="dark"] #startScreen.panel {
+  background: transparent;
+}
+
+html[data-theme="dark"] :is(
+  .mastery-mini,
+  .multiplayer-start,
+  .question-area,
+  .lobby-status,
+  .online-board,
+  .mistakes-section,
+  .mastery-overview,
+  .result-stat,
+  .stat,
+  .stat.difficulty-stat,
+  .stat.difficulty-stat[data-level]
+) {
+  background: #1b304b;
+  color: #f5f8ff;
+  border-color: #405777;
+}
+
+/* 5. Titulos y textos */
+html[data-theme="dark"] :is(
+  .settings h2,
+  .settings > p,
+  .game-top h2,
+  .question-area h3,
+  .question-word,
+  .question-word.context-word,
+  .results h2,
+  .control label,
+  .online-form label,
+  .progress-meta,
+  .timer-label,
+  .difficulty-feedback,
+  .difficulty-feedback.down,
+  .difficulty-summary,
+  .online-notice,
+  .online-standby,
+  .online-clock
+) {
+  color: #f5f8ff !important;
+}
+
+html[data-theme="dark"] :is(
+  .hint,
+  .question-subtitle,
+  .keyboard-note
+) {
+  color: #bfcee3;
+}
+
+/* 6. Campos y listas desplegables */
+html[data-theme="dark"] :is(
+  .control select,
+  .online-form input,
+  .online-form select
+) {
+  background: #0b1729;
+  color: #ffffff;
+  border: 2px solid #526581;
+}
+
+html[data-theme="dark"] :is(
+  .control select,
+  .online-form input,
+  .online-form select
+):focus {
+  border-color: #38a5ff;
+  outline-color: #38a5ff;
+}
+
+/* 7. Botones */
+html[data-theme="dark"] .btn {
+  background: #ffe400;
+  color: #101828;
+  border-color: #ffe400;
+}
+
+html[data-theme="dark"] .btn:hover {
+  background: #fff176;
+  border-color: #fff176;
+}
+
+html[data-theme="dark"] .btn-secondary {
+  background: #172b45;
+  color: #ffffff;
+  border-color: #7b9abc;
+}
+
+html[data-theme="dark"] .btn-secondary:hover {
+  background: #29476c;
+  border-color: #a6c9ef;
+}
+
+html[data-theme="dark"] .btn-quiet {
+  background: transparent;
+  color: #ffffff;
+  border-color: #7b9abc;
+}
+
+html[data-theme="dark"] .btn-quiet:hover {
+  background: #29476c;
+  color: #ffffff;
+}
+
+/* 8. Respuestas del quiz */
+html[data-theme="dark"] .answer {
+  background: #152841;
+  color: #ffffff;
+  border-color: #526581;
+}
+
+html[data-theme="dark"] .answer .letter {
+  background: #315579;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .answer:hover:not(:disabled) {
+  background: #244566;
+  border-color: #38a5ff;
+}
+
+html[data-theme="dark"] .answer.correct {
+  background: #3fcc6b;
+  color: #111111;
+  border-color: #3fcc6b;
+}
+
+html[data-theme="dark"] .answer.correct .letter {
+  background: #111111;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .answer.incorrect {
+  background: #b93850;
+  color: #ffffff;
+  border-color: #f1788b;
+}
+
+html[data-theme="dark"] .answer.incorrect .letter {
+  background: #ffffff;
+  color: #111111;
+}
+
+/* 9. Progreso y estadisticas */
+html[data-theme="dark"] :is(
+  .progress-track,
+  .timer-track,
+  .mini-progress
+) {
+  background: #314761;
+}
+
+html[data-theme="dark"] .stat.streak {
+  background: #ffe400;
+  color: #111111;
+}
+
+html[data-theme="dark"] .stat.difficulty-stat[data-level="5"] {
+  background: #ffe400;
+  color: #111111;
+}
+
+html[data-theme="dark"] .score-ring {
+  background: conic-gradient(
+    #38a5ff var(--percentage),
+    #314761 0
+  );
+}
+
+html[data-theme="dark"] .score-ring::before {
+  background: #111e33;
+}
+
+/* 10. Resultados y multijugador */
+html[data-theme="dark"] :is(
+  .mistake-item,
+  .weak-item,
+  .player-chip,
+  .rank-row
+) {
+  background: #182c46;
+  color: #ffffff;
+  border-color: #526581;
+}
+
+html[data-theme="dark"] .rank-row strong {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .rank-row.my-rank {
+  background: #294f79;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] :is(
+  .online-clock.urgent,
+  .room-code,
+  .winner-banner
+) {
+  background: #ffe400;
+  color: #111111;
+}
+
+html[data-theme="dark"] .winner-banner p,
+html[data-theme="dark"] .winner-banner #winnerName {
+  color: #111111;
+}
+
+html[data-theme="dark"] .keyboard-note b {
+  background: #29476c;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .game-bottom,
+html[data-theme="dark"] .start-bottom {
+  border-color: #314761;
+}
+
+/* El telefono ilustrativo mantiene su diseno original */
+html[data-theme="dark"] .hero-art {
+  background: #3fcc6b;
+  border-color: #111111;
+}
+
+html[data-theme="dark"] .flash-card {
+  background: #ffffff;
+  color: #111111;
+}
+
+html[data-theme="dark"] .flash-card strong,
+html[data-theme="dark"] .flash-card span {
+  color: #111111;
+}
+
+/* 11. Ajustes moviles */
+@media (max-width: 720px) {
+  .theme-actions {
+    gap: 8px;
+  }
+
+  .theme-actions .top-tag {
+    display: none;
+  }
+
+  .theme-toggle {
+    padding: 9px 11px;
+    font-size: .78rem;
+  }
+
+  html[data-theme="dark"] #gameScreen .question-area,
+  html[data-theme="dark"] #onlineGameScreen .question-area {
+    background: #1b304b;
+  }
+
+  html[data-theme="dark"] #gameScreen .game-bottom {
+    background: #111e33;
+    border-color: #314761;
+  }
+
+  html[data-theme="dark"] #onlineGameScreen .online-clock {
+    background: #1b304b;
+    color: #ffffff;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  html[data-theme="dark"] .answer:hover:not(:disabled) {
+    background: #152841;
+    border-color: #526581;
+  }
+
+  html[data-theme="dark"] .answer:hover:not(:disabled) .letter {
+    background: #315579;
+  }
+
+  html[data-theme="dark"] .answer:active:not(:disabled) {
+    background: #244566;
+    border-color: #38a5ff;
+  }
+}
+
