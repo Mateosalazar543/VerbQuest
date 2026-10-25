@@ -2456,3 +2456,151 @@ html[data-theme="dark"] .answer:hover:not(:disabled) {
   }
 }
 
+
+/* ===================================================
+   VERBQUEST - FREDDY JUMPSCARE FULLSCREEN
+   Pantalla completa en PC, tablet y celular
+   =================================================== */
+
+/* Contenedor que ocupa toda la pantalla */
+.vq-jumpscare {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: block !important;
+  overflow: hidden !important;
+
+  background: #000000;
+  z-index: 2147483647;
+
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+/* Mantener el jumpscare oculto cuando no se utiliza */
+.vq-jumpscare[hidden] {
+  display: none !important;
+}
+
+/* El GIF ocupa completamente el contenedor */
+.vq-jumpscare__content {
+  position: absolute !important;
+  inset: 0 !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden;
+}
+
+/* Freddy se expande a toda la pantalla */
+.vq-jumpscare__content img {
+  position: absolute !important;
+  inset: 0 !important;
+
+  display: block !important;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  aspect-ratio: auto !important;
+
+  object-fit: cover !important;
+  object-position: center center;
+
+  border: none;
+  border-radius: 0;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Mensaje discreto en la parte inferior */
+.vq-jumpscare__content p {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 2;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  margin: 0;
+  padding: 24px 16px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+
+  background: linear-gradient(
+    transparent,
+    rgba(0, 0, 0, .85)
+  );
+
+  color: #ffffff;
+  text-align: center;
+
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 700;
+}
+
+/* Boton de cerrar por encima del GIF */
+.vq-jumpscare__close {
+  position: absolute !important;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+
+  z-index: 10;
+
+  min-width: 90px;
+  min-height: 44px;
+
+  background: rgba(0, 0, 0, .75);
+  color: white;
+
+  border: 2px solid white;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+/* Ajustes para celulares */
+@media (max-width: 720px) {
+  .vq-jumpscare {
+    width: 100vw !important;
+    height: 100dvh !important;
+  }
+
+  .vq-jumpscare__content img {
+    width: 100% !important;
+    height: 100% !important;
+
+    object-fit: cover !important;
+    object-position: center center;
+  }
+
+  .vq-jumpscare__content p {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+}
+
