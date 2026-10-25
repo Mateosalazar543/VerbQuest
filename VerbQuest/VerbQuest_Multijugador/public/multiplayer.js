@@ -217,7 +217,7 @@
     e.preventDefault();if(busy)return;
     errorAt('onlineSetupError','');busy=true;$m('submitRoomButton').disabled=true;
     try{
-      const name=$m('onlineName').value;
+      const name=window.VerbQuestNamePolicy?.moderateName($m('onlineName').value) || $m('onlineName').value;
       const details=setupMode==='create'
         ?await api('create',{name,capacity:Number($m('maxPlayers').value),duration:Number($m('roomMinutes').value),mode:$m('roomMode').value})
         :await api('join',{name,code:$m('joinCode').value.trim().toUpperCase()});
