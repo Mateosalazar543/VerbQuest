@@ -2604,3 +2604,117 @@ html[data-theme="dark"] .answer:hover:not(:disabled) {
   }
 }
 
+
+/* =========================================================
+   CHALLENGE LIBRARY / CONSOLE DASHBOARD
+   Aislado del cuestionario, lobby y demás pantallas de juego.
+   ========================================================= */
+.vq-library { --vq-rail-outline: #008fff; margin-top: 24px; min-width: 0; }
+.vq-library button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.vq-library-heading, .vq-rail-heading, .vq-rail-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.vq-library-eyebrow { color: #0071d6; font-size: .7rem; font-weight: 800; letter-spacing: .14em; }
+.vq-library-heading h3 { margin: 3px 0 0; font-size: clamp(1.32rem, 3vw, 1.8rem); line-height: 1.2; letter-spacing: -.035em; }
+.vq-library-count { flex-shrink: 0; color: #4b6477; font-size: .72rem; font-weight: 800; letter-spacing: .04em; }
+.vq-rail-heading { margin: 18px 0 10px; }
+.vq-rail-heading p { margin: 0; font-size: .85rem; color: #526779; font-weight: 600; }
+.vq-rail-nav { gap: 8px; }
+.vq-library .vq-rail-arrow { display: grid; place-items: center; width: 39px; height: 39px; border: 1.5px solid #cbdbe9; border-radius: 9px; background: #fff; color: #111; font-size: 1.3rem; line-height: 1; transition: background .18s, border-color .18s, transform .18s; }
+.vq-library .vq-rail-arrow:not(:disabled):hover { border-color: #008fff; background: #e6f4ff; transform: translateY(-2px); }
+.vq-library .vq-rail-arrow:disabled { cursor: default; opacity: .32; }
+.vq-game-rail { display: flex; gap: 13px; overflow-x: auto; overflow-y: hidden; padding: 5px 3px 16px; scroll-snap-type: x mandatory; scroll-padding-inline: 4px; scrollbar-width: none; overscroll-behavior-x: contain; min-width: 0; }
+.vq-game-rail::-webkit-scrollbar { display: none; }
+.vq-library .vq-game-tile { display: flex; position: relative; flex-direction: column; flex: 0 0 calc((100% - 39px) / 4); min-width: 0; padding: 5px; border: 2px solid transparent; border-radius: 12px; background: transparent; color: #111; text-align: left; scroll-snap-align: center; transition: background .2s, border-color .2s, transform .2s, box-shadow .2s; }
+.vq-library .vq-game-tile:hover { background: #edf7ff; transform: translateY(-3px); }
+.vq-library .vq-game-tile.is-selected { border-color: #008fff; background: #e6f4ff; box-shadow: 0 5px 0 #a9d9ff; }
+.vq-game-cover { display: flex; position: relative; overflow: hidden; isolation: isolate; flex-direction: column; justify-content: space-between; width: 100%; height: 152px; padding: 11px; border-radius: 6px; color: #fff; }
+.vq-game-cover::before { content: ''; position: absolute; z-index: -1; width: 160px; height: 160px; border-radius: 50%; right: -56px; top: -62px; border: 32px solid rgba(255,255,255,.13); }
+.vq-game-cover::after { content: ''; position: absolute; z-index: -1; width: 150px; height: 150px; border-radius: 50%; left: -92px; bottom: -102px; border: 23px solid rgba(255,255,255,.1); }
+.vq-cover--mixed { background: linear-gradient(135deg, #0078e4, #0955b6); }
+.vq-cover--past { background: linear-gradient(130deg, #293c59, #10192c); }
+.vq-cover--participle { background: linear-gradient(135deg, #29b86b, #087d67); }
+.vq-cover--base { background: linear-gradient(135deg, #8365e9, #4839a3); }
+.vq-cover-top, .vq-cover-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .61rem; font-weight: 800; letter-spacing: .085em; }
+.vq-cover-bottom { color: rgba(255,255,255,.85); font-size: .58rem; }
+.vq-cover-mark { position: absolute; top: 37px; right: 8px; color: #ffe400; font: 800 3.4rem/1 'Archivo Black', 'Plus Jakarta Sans', sans-serif; opacity: .97; transform: rotate(-9deg); }
+.vq-cover-words { display: flex; align-items: flex-start; flex-direction: column; gap: 1px; margin: 4px 0 0; font: 400 clamp(1rem, 1.7vw, 1.52rem)/1.08 'Archivo Black', 'Plus Jakarta Sans', sans-serif; letter-spacing: -.035em; }
+.vq-cover-words span { color: #ffe400; }
+.vq-game-meta { display: flex; flex-direction: column; gap: 4px; padding: 10px 2px 5px; }
+.vq-game-meta strong { font-size: .88rem; line-height: 1.2; letter-spacing: -.025em; }
+.vq-game-meta small { font-size: .72rem; line-height: 1.35; color: #56697c; }
+.vq-game-selected { position: absolute; display: none; top: 12px; right: 12px; width: 22px; height: 22px; place-items: center; border: 2px solid #fff; border-radius: 50%; background: #ffe400; color: #111; font-size: .83rem; font-weight: 900; box-shadow: 0 1px 4px #0003; }
+.vq-game-tile.is-selected .vq-game-selected { display: grid; }
+.vq-library :is(.vq-game-tile, .vq-choice, .vq-rail-arrow):focus-visible { outline: 3px solid #f3c500; outline-offset: 3px; }
+.vq-game-info { display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-radius: 11px; background: #e6f4ff; border: 1px solid #c8e5ff; }
+.vq-info-icon { flex: 0 0 42px; display: grid; place-items: center; height: 42px; border-radius: 9px; background: #008fff; color: #ffe400; font-size: 1.6rem; }
+.vq-info-overline { display: block; color: #2c638b; font-size: .64rem; font-weight: 800; letter-spacing: .12em; }
+.vq-game-info strong { display: block; margin-top: 2px; font-size: 1rem; }
+.vq-game-info p { color: #36546b; margin: 4px 0 0; font-size: .78rem; line-height: 1.45; }
+.vq-ready { flex-shrink: 0; margin-left: auto; padding: 7px 9px; border-radius: 6px; background: #d2f5de; color: #17643d; font-size: .69rem; font-weight: 900; letter-spacing: .05em; }
+.vq-settings-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 22px; margin: 23px 0 0; }
+.vq-pick-group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.vq-pick-group legend { width: 100%; margin-bottom: 10px; padding: 0; font-size: .83rem; font-weight: 800; }
+.vq-config-index { display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; width: 24px; height: 24px; border-radius: 5px; background: #111; color: #fff; font-size: .67rem; }
+.vq-choice-list { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 7px; }
+.vq-library .vq-choice { min-width: 0; min-height: 66px; padding: 10px 3px 7px; border: 1.5px solid #d3e0eb; border-radius: 9px; background: #f7fafc; color: #111; font-size: 1.17rem; line-height: 1.1; font-weight: 800; transition: background .18s, border-color .18s, transform .18s; }
+.vq-choice small { display: block; margin-top: 6px; color: #546777; font-size: .65rem; font-weight: 700; }
+.vq-library .vq-choice:hover { background: #e6f4ff; border-color: #008fff; transform: translateY(-2px); }
+.vq-library .vq-choice.is-selected { background: #111; border-color: #111; color: #ffe400; }
+.vq-choice.is-selected small { color: #fff; }
+.vq-selection-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-top: 18px; padding: 10px 12px; border-radius: 8px; background: #f5f9fc; color: #3c5266; font-size: .74rem; }
+.vq-selection-summary > span:first-child { color: #30ba6f; }
+.vq-selection-summary strong { color: #111; letter-spacing: .055em; font-size: .68rem; }
+.vq-native-selects[hidden] { display: none !important; }
+
+/* La biblioteca respeta el tema oscuro actual. */
+html[data-theme="dark"] .vq-library { color: #f5f8ff; }
+html[data-theme="dark"] .vq-library-eyebrow { color: #82caff; }
+html[data-theme="dark"] .vq-library-count,
+html[data-theme="dark"] .vq-rail-heading p { color: #b4c6d9; }
+html[data-theme="dark"] .vq-library .vq-rail-arrow { background: #172b45; color: #f5f8ff; border-color: #405777; }
+html[data-theme="dark"] .vq-library .vq-rail-arrow:not(:disabled):hover { background: #274965; }
+html[data-theme="dark"] .vq-library .vq-game-tile { color: #f5f8ff; }
+html[data-theme="dark"] .vq-library .vq-game-tile:hover { background: #243e5e; }
+html[data-theme="dark"] .vq-library .vq-game-tile.is-selected { background: #1a3957; border-color: #38a5ff; box-shadow: 0 5px 0 #244e72; }
+html[data-theme="dark"] .vq-game-meta small { color: #c0d0e2; }
+html[data-theme="dark"] .vq-game-info { background: #1b304b; border-color: #405777; }
+html[data-theme="dark"] .vq-info-overline { color: #99d2ff; }
+html[data-theme="dark"] .vq-game-info p { color: #c3d3e5; }
+html[data-theme="dark"] .vq-library .vq-choice { background: #182d47; border-color: #455c78; color: #f5f8ff; }
+html[data-theme="dark"] .vq-choice small { color: #bdcce0; }
+html[data-theme="dark"] .vq-library .vq-choice:hover { background: #244764; border-color: #38a5ff; }
+html[data-theme="dark"] .vq-library .vq-choice.is-selected { background: #ffe400; border-color: #ffe400; color: #101828; }
+html[data-theme="dark"] .vq-library .vq-choice.is-selected small { color: #101828; }
+html[data-theme="dark"] .vq-selection-summary { background: #1b304b; color: #c2d3e5; }
+html[data-theme="dark"] .vq-selection-summary strong { color: #f5f8ff; }
+html[data-theme="dark"] .vq-config-index { background: #ffe400; color: #101828; }
+
+@media (min-width: 721px) and (max-width: 940px) {
+  .vq-library .vq-game-tile { flex-basis: calc((100% - 26px) / 3); }
+}
+@media (max-width: 720px) {
+  .vq-library { margin-top: 20px; }
+  .vq-library-heading { align-items: flex-start; }
+  .vq-library-count { font-size: .61rem; margin-top: 4px; }
+  .vq-rail-heading { margin-top: 16px; }
+  .vq-rail-heading p { font-size: .76rem; }
+  .vq-library .vq-game-tile { flex: 0 0 min(76%, 250px); }
+  .vq-game-cover { height: 153px; }
+  .vq-cover-words { font-size: 1.6rem; }
+  .vq-game-info { align-items: flex-start; gap: 10px; padding: 13px; }
+  .vq-info-icon { flex-basis: 32px; height: 32px; font-size: 1.2rem; }
+  .vq-ready { display: none; }
+  .vq-settings-row { grid-template-columns: 1fr; gap: 20px; }
+  .vq-selection-summary { gap: 6px; }
+}
+@media (max-width: 360px) {
+  .vq-library-heading h3 { font-size: 1.2rem; }
+  .vq-library-count { display: none; }
+  .vq-cover-top { font-size: .58rem; }
+  .vq-library .vq-game-tile { flex-basis: 83%; }
+  .vq-library .vq-choice { font-size: 1rem; }
+  .vq-choice small { font-size: .6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vq-library :is(.vq-game-tile, .vq-choice, .vq-rail-arrow) { transition: none; }
+  .vq-game-rail { scroll-behavior: auto; }
+}

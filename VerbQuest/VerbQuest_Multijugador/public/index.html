@@ -75,35 +75,99 @@
         <div class="settings">
           <div class="section-top"><h2>Set up your challenge</h2><span id="bankCount" class="pill">Loading…</span></div>
           <p class="muted">Choose how you want to study. Every question has four options and reveals all three forms once you answer. Ten-question sessions adapt faster, while longer sessions progress more gradually.</p>
-          <div class="controls">
-            <div class="control">
+          <!-- Biblioteca de desafíos: interfaz estilo consola, sin cambiar el motor de juego. -->
+          <section class="vq-library" aria-label="Challenge library">
+            <div class="vq-library-heading">
+              <div><span class="vq-library-eyebrow">YOUR GAME LIBRARY</span><h3>Choose your challenge</h3></div>
+              <span class="vq-library-count">04 / GAME MODES</span>
+            </div>
+            <div class="vq-rail-heading">
+              <p id="vqModePrompt">Browse game modes <span aria-hidden="true">·</span> Pick one to play</p>
+              <div class="vq-rail-nav" aria-label="Navigate game modes">
+                <button class="vq-rail-arrow" id="vqModePrev" type="button" aria-label="Previous game mode">&#8592;</button>
+                <button class="vq-rail-arrow" id="vqModeNext" type="button" aria-label="Next game mode">&#8594;</button>
+              </div>
+            </div>
+            <div class="vq-game-rail" id="vqGameRail" role="group" aria-labelledby="vqModePrompt">
+              <button class="vq-game-tile is-selected" type="button" data-mode="mixed" aria-pressed="true" aria-label="Mixed challenge, selected">
+                <span class="vq-game-cover vq-cover--mixed" aria-hidden="true">
+                  <span class="vq-cover-top">VERBQUEST <span>01</span></span>
+                  <span class="vq-cover-mark">✦</span>
+                  <span class="vq-cover-words">GO<span>WENT</span>GONE</span>
+                  <span class="vq-cover-bottom">ALL VERB FORMS</span>
+                </span>
+                <span class="vq-game-meta"><strong>Mixed Challenge</strong><small>All forms · Adaptive</small></span>
+                <span class="vq-game-selected" aria-hidden="true">✓</span>
+              </button>
+              <button class="vq-game-tile" type="button" data-mode="past" aria-pressed="false" aria-label="Simple past challenge">
+                <span class="vq-game-cover vq-cover--past" aria-hidden="true">
+                  <span class="vq-cover-top">VERBQUEST <span>02</span></span>
+                  <span class="vq-cover-mark">↗</span>
+                  <span class="vq-cover-words">GO<span>→</span>WENT</span>
+                  <span class="vq-cover-bottom">SIMPLE PAST</span>
+                </span>
+                <span class="vq-game-meta"><strong>Simple Past</strong><small>Find the past tense</small></span>
+                <span class="vq-game-selected" aria-hidden="true">✓</span>
+              </button>
+              <button class="vq-game-tile" type="button" data-mode="participle" aria-pressed="false" aria-label="Past participle challenge">
+                <span class="vq-game-cover vq-cover--participle" aria-hidden="true">
+                  <span class="vq-cover-top">VERBQUEST <span>03</span></span>
+                  <span class="vq-cover-mark">◎</span>
+                  <span class="vq-cover-words">GO<span>→</span>GONE</span>
+                  <span class="vq-cover-bottom">PAST PARTICIPLE</span>
+                </span>
+                <span class="vq-game-meta"><strong>Past Participle</strong><small>Master the third form</small></span>
+                <span class="vq-game-selected" aria-hidden="true">✓</span>
+              </button>
+              <button class="vq-game-tile" type="button" data-mode="base" aria-pressed="false" aria-label="Base form challenge">
+                <span class="vq-game-cover vq-cover--base" aria-hidden="true">
+                  <span class="vq-cover-top">VERBQUEST <span>04</span></span>
+                  <span class="vq-cover-mark">Aa</span>
+                  <span class="vq-cover-words">WENT<span>→</span>GO</span>
+                  <span class="vq-cover-bottom">BASE FORM</span>
+                </span>
+                <span class="vq-game-meta"><strong>Base Form</strong><small>Return to the infinitive</small></span>
+                <span class="vq-game-selected" aria-hidden="true">✓</span>
+              </button>
+            </div>
+            <div class="vq-game-info">
+              <span class="vq-info-icon" aria-hidden="true">✦</span>
+              <div><span class="vq-info-overline">SELECTED CHALLENGE</span><strong id="vqSelectedMode">Mixed Challenge</strong>
+                <p id="vqModeDescription">A balanced mix of base, past and participle forms that adapts as you play.</p>
+              </div>
+              <span class="vq-ready" aria-hidden="true">✓ READY</span>
+            </div>
+            <div class="vq-settings-row">
+              <fieldset class="vq-pick-group" data-select="countSelect">
+                <legend><span class="vq-config-index">01</span> Session length</legend>
+                <div class="vq-choice-list" role="group" aria-label="Number of questions">
+                  <button type="button" class="vq-choice is-selected" data-value="10" aria-pressed="true">10 <small>Quick</small></button>
+                  <button type="button" class="vq-choice" data-value="20" aria-pressed="false">20 <small>Classic</small></button>
+                  <button type="button" class="vq-choice" data-value="40" aria-pressed="false">40 <small>Marathon</small></button>
+                  <button type="button" class="vq-choice" data-value="all" aria-pressed="false">ALL <small>Full bank</small></button>
+                </div>
+              </fieldset>
+              <fieldset class="vq-pick-group" data-select="timerSelect">
+                <legend><span class="vq-config-index">02</span> Time per question</legend>
+                <div class="vq-choice-list" role="group" aria-label="Time per question">
+                  <button type="button" class="vq-choice is-selected" data-value="0" aria-pressed="true">∞ <small>Relaxed</small></button>
+                  <button type="button" class="vq-choice" data-value="10" aria-pressed="false">10s <small>Speed</small></button>
+                  <button type="button" class="vq-choice" data-value="15" aria-pressed="false">15s <small>Focus</small></button>
+                  <button type="button" class="vq-choice" data-value="20" aria-pressed="false">20s <small>Steady</small></button>
+                </div>
+              </fieldset>
+            </div>
+            <div class="vq-selection-summary" aria-live="polite"><span aria-hidden="true">●</span><strong>YOUR LOADOUT</strong><span id="vqSelectionSummary">Mixed Challenge · 10 questions · No time limit</span></div>
+            <!-- Los selects originales son la fuente de verdad que utiliza app.js. -->
+            <div class="vq-native-selects" hidden>
               <label for="modeSelect">Practice type</label>
-              <select id="modeSelect">
-                <option value="mixed">Mixed (recommended)</option>
-                <option value="past">Simple past</option>
-                <option value="participle">Past participle</option>
-                <option value="base">Base form</option>
-              </select>
-            </div>
-            <div class="control">
+              <select id="modeSelect"><option value="mixed">Mixed (recommended)</option><option value="past">Simple past</option><option value="participle">Past participle</option><option value="base">Base form</option></select>
               <label for="countSelect">Number of questions</label>
-              <select id="countSelect">
-                <option value="10">10 questions</option>
-                <option value="20">20 questions</option>
-                <option value="40">40 questions</option>
-                <option value="all">All verbs</option>
-              </select>
-            </div>
-            <div class="control">
+              <select id="countSelect"><option value="10">10 questions</option><option value="20">20 questions</option><option value="40">40 questions</option><option value="all">All verbs</option></select>
               <label for="timerSelect">Time per question</label>
-              <select id="timerSelect">
-                <option value="0">No limit</option>
-                <option value="10">10 seconds</option>
-                <option value="15">15 seconds</option>
-                <option value="20">20 seconds</option>
-              </select>
+              <select id="timerSelect"><option value="0">No limit</option><option value="10">10 seconds</option><option value="15">15 seconds</option><option value="20">20 seconds</option></select>
             </div>
-          </div>
+          </section>
           <div class="mastery-mini" aria-label="Learning progress">
             <strong id="masteryMini">0 mastered · 0/240 forms practiced</strong>
             <div class="mini-progress" aria-hidden="true"><div id="masteryMiniFill" style="width:0%"></div></div>
@@ -261,6 +325,7 @@
 <span class="footer-credits">© 2026 <a href="https://github.com/Mateosalazar543" target="_blank" rel="noopener noreferrer"><strong>Mateo Salazar Bogota</strong></a> · Pontificia Universidad Javeriana · Bogotá, Colombia</span>    </footer>
   </div>
 
+  <script src="./challenge-picker.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./name-policy.js" defer></script>
   <script src="./jumpscare.js" defer></script>

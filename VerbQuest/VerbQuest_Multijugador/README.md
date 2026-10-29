@@ -16,6 +16,16 @@ Esta versión **mantiene la interfaz de VerbQuest v3**, los 80 verbos, los 5 niv
 - **No se necesitan dependencias npm de terceros, base de datos ni claves API.**
 - Para que personas de diferentes redes puedan unirse, necesitas alojar el servidor Node.js en una dirección pública HTTPS.
 
+## Nuevo selector de desafíos estilo consola (PC y celular)
+
+La pantalla principal incluye una **biblioteca de desafíos** inspirada en la navegación por juegos de Xbox 360:
+
+- **PC:** selecciona una tarjeta con el mouse, usa las flechas del carrusel o desplázate con **← / →, Inicio / Fin** al enfocar las tarjetas.
+- **Celular:** desliza horizontalmente las tarjetas; la tarjeta centrada se selecciona automáticamente. También puedes tocar una tarjeta.
+- **Opciones rápidas:** elige 10, 20, 40 o todos los verbos y sin límite / 10 / 15 / 20 segundos por pregunta.
+- **Accesibilidad:** botones con `aria-pressed`, navegación con teclado, foco visible y movimiento reducido cuando el sistema lo solicita.
+- **Compatibilidad:** `public/challenge-picker.js` sincroniza los controles visuales con `modeSelect`, `countSelect` y `timerSelect`. `public/app.js` y el motor de juego conservan su comportamiento; el modo multijugador no se modifica.
+
 ## Paso 1 — Ejecutar en Windows
 
 1. Extrae el ZIP de la entrega; entra a la carpeta `VerbQuest_Multijugador`.
